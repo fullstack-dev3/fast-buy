@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useEffect, useState , FormEvent} from 'react'
+import React, { useEffect, useState, FormEvent } from 'react'
 import { useDispatch } from 'react-redux';
+import { TailSpin } from 'react-loader-spinner';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
@@ -12,15 +13,18 @@ import { login_me } from '@/Services/auth';
 import { setUserData } from '@/utils/UserDataSlice';
 
 export default function Login() {
-  const dispatch = useDispatch()
-  const Router = useRouter()
+  const dispatch = useDispatch();
+  const Router = useRouter();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState({ email: "", password: "" });
+  const [loading, setLoding] = useState<Boolean>(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-      
+
+    setLoding(true);
+
     if (!formData.email) {
       setError({ ...error, email: "Email Field is Required" })
       return;
@@ -34,6 +38,8 @@ export default function Login() {
     const res = await login_me(formData);
 
     if (res.success) {
+      setLoding(false);
+
       Cookies.set('token', res?.finalData?.token);
       localStorage.setItem('user', JSON.stringify(res?.finalData?.user));
 
@@ -43,20 +49,15 @@ export default function Login() {
       dispatch(setUserData(JSON.parse(userDataString)));
 
       if (res?.finalData?.user?.role === 'admin') {
-        Router.push('/Dashboard');
+        Router.push('/dashboard');
       } else {
         Router.push('/');
       }
     } else {
+      setLoding(false);
       toast.error(res.message);
     }
   }
-
-  useEffect(() => {
-    if (Cookies.get('token')) {
-      Router.push('/');
-    }
-  });
 
   return (
     <>
@@ -116,13 +117,31 @@ export default function Login() {
                     Forgot password ?
                   </Link>
                 </div>
-
-                <button
-                  type="submit"
-                  className="w-full text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
-                >
-                  Sign in
-                </button>
+                {loading
+                  ?
+                    <button
+                      type="button"
+                      className="w-full flex items-center justify-center text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+                    >
+                      <TailSpin
+                        ariaLabel="tail-spin-loading"
+                        color="white"
+                        height="20"
+                        radius="1"
+                        visible={true}
+                        width="20"
+                        wrapperClass=""
+                        wrapperStyle={{}}
+                      />
+                    </button>
+                  :
+                    <button
+                      type="submit"
+                      className="w-full text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+                    >
+                      Sign in
+                    </button>
+                }
                 <p className="text-sm text-black ">
                   Don’t have an account yet?
                   <Link href="/auth/register" className="ml-1 font-medium text-orange-600 hover:underline ">

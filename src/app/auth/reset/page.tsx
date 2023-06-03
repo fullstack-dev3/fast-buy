@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useState   , FormEvent} from 'react'
+import React, { useState, FormEvent } from 'react';
+import { TailSpin } from 'react-loader-spinner';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
@@ -12,10 +13,13 @@ export default function ForgetPassword() {
 
   const [formData, setFormData] = useState({ email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState({ email: "", password: "", confirmPassword: "" });
+  const [loading, setLoding] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
+    setLoding(true);
+
     if (!formData.email) {
       setError({ ...error, email: "Email Field is Required" })
       return;
@@ -37,11 +41,14 @@ export default function ForgetPassword() {
 
     const res = await forget_password(formData);
     if (res.success) {
+      setLoding(false);
+
       toast.success(res.message);
       setTimeout(() => {
         Router.push('/auth/login')
       }, 1000);
     } else {
+      setLoding(false);
       toast.error(res.message);
     }
   }
@@ -99,16 +106,35 @@ export default function ForgetPassword() {
                 />
                 {error.confirmPassword && <p className="text-sm text-red-500">{error.confirmPassword}</p>}
               </div>
-              <button
-                type="submit"
-                className="w-full text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
-              >
-                Reset passwod
-              </button>
+              {loading
+                ?
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-center text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+                  >
+                    <TailSpin
+                      ariaLabel="tail-spin-loading"
+                      color="white"
+                      height="20"
+                      radius="1"
+                      visible={true}
+                      width="20"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  </button>
+                :
+                  <button
+                    type="submit"
+                    className="w-full text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+                  >
+                    Reset
+                  </button>
+              }
             </form>
           </div>
         </div>
-        
+
         <ToastContainer />
       </section>
     </>
