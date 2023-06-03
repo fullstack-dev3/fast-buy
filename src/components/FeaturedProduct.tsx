@@ -1,5 +1,5 @@
-import React from 'react'
-import ProductCard from './ProductCard'
+import React from 'react';
+import ProductCard from './ProductCard';
 
 export default function FeaturedProduct() {
   return (
@@ -9,7 +9,7 @@ export default function FeaturedProduct() {
           Top Products
         </h1>
       </div>
-      <div className='w-4/5 h-full py-2 px-4 flex items-center justify-center flex-wrap'>
+      <div className='md:w-4/5 w-full px-1 h-full py-2 md:px-4 flex items-center justify-center flex-wrap'>
         <ProductCard />
         <ProductCard />
         <ProductCard />

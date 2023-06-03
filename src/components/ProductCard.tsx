@@ -1,6 +1,6 @@
-import Image from 'next/image'
-import React from 'react'
-import {BsCartPlus , BsFillBookmarkCheckFill} from 'react-icons/bs'
+import React from 'react';
+import {BsCartPlus , BsFillBookmarkCheckFill} from 'react-icons/bs';
+import Image from 'next/image';
 
 export default function ProductCard() {
   return (
@@ -14,8 +14,12 @@ export default function ProductCard() {
         <p>Help You gain Energy </p>
         <p className='font-semibold'>$ 5000</p>
         <div className="card-actions justify-end">
-          <button className="btn btn-circle btn-ghost "><BsCartPlus className='text-2xl text-orange-600 font-semibold' /></button>
-          <button className="btn btn-circle btn-ghost absolute top-0 right-0 "><BsFillBookmarkCheckFill className='text-2xl text-orange-600 font-semibold' /></button>
+          <button className="btn btn-circle btn-ghost ">
+            <BsCartPlus className='text-2xl text-orange-600 font-semibold' />
+          </button>
+          <button className="btn btn-circle btn-ghost absolute top-0 right-0 ">
+            <BsFillBookmarkCheckFill className='text-2xl text-orange-600 font-semibold' />
+          </button>
         </div>
       </div>
     </div>
