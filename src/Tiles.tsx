@@ -24,9 +24,15 @@ const data = [
     "count": 50
   },
   {
-    "icon": "GrCompliance",
-    "color": "text-orange-600",
+    "icon": "BsClipboardCheck",
+    "color": "text-black",
     "title": "Completed Orders",
+    "count": 100
+  },
+  {
+    "icon": "TfiStatsUp",
+    "color": "text-orange-600",
+    "title": "Month Statistics",
     "count": 100
   },
 ]
