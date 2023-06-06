@@ -1,12 +1,31 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 import AdminNavbar from '@/components/AdminNavbar';
 import AdminSidebar from '@/components/AdminSidebar';
 import StatsTiles from '@/components/StatsTiles';
 import data from '@/Tiles';
 
+interface userData {
+  email : String, 
+  role :String , 
+  _id: String,
+  name : String
+}
+
 export default function Dashboard() {
+  const Router = useRouter();
+  
+  useEffect(() => {
+    const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if(!Cookies.get('token') || user?.role !== 'admin'){
+      Router.push('/')
+    }
+  });
+
   return (
     <div className='w-full min-h-screen flex bg-base-200'>
       <AdminSidebar />
