@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import AdminNavbar from '@/components/AdminNavbar';
@@ -9,20 +10,19 @@ import StatsTiles from '@/components/StatsTiles';
 import data from '@/Tiles';
 
 interface userData {
-  email : String, 
-  role :String , 
+  name: String
+  email: String, 
+  role: String , 
   _id: String,
-  name : String
 }
 
 export default function Dashboard() {
   const Router = useRouter();
-  
+
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
-
-    if(!Cookies.get('token') || user?.role !== 'admin'){
-      Router.push('/')
+    if (!Cookies.get('token') || user?.role !== 'admin') {
+      Router.push('/');
     }
   });
 
@@ -43,6 +43,7 @@ export default function Dashboard() {
           })}
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 }

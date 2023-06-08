@@ -79,7 +79,7 @@ export default function AddCategory() {
     if (res.success) {
       toast.success(res?.message);
       setLoader(false);
-      Router.push('/dashboard');
+      Router.push('/categories');
     } else {
       toast.error(res?.message);
       setLoader(false);
@@ -126,7 +126,7 @@ export default function AddCategory() {
               <div className="form-control w-full mb-2">
                 <label className="label">
                   <span className="label-text">Category Name</span>
-                </label >
+                </label>
                 <input
                   {...register("name", { required: true })}
                   type="text"
@@ -138,7 +138,7 @@ export default function AddCategory() {
                     This field is required
                   </span>
                 }
-              </div >
+              </div>
               <div className="form-control w-full mb-2">
                 <label className="label">
                   <span className="label-text">Category Slug</span>
