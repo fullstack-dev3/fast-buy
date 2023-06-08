@@ -21,10 +21,10 @@ export default function AdminNavbar() {
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li><Link href={'/dashboard'}>Homepage</Link></li>
-            <li><Link href={''}>Categories</Link></li>
-            <li><Link href={'/category/add-category'}>Add Category</Link></li>
-            <li><Link href={''}>Products</Link></li>
-            <li><Link href={'/product/add-product'}>Add Products</Link></li>
+            <li><Link href={'/categories'}>Categories</Link></li>
+            <li><Link href={'/categories/add-category'}>Add Category</Link></li>
+            <li><Link href={'/products'}>Products</Link></li>
+            <li><Link href={'/products/add-product'}>Add Product</Link></li>
             <li><Link href={''}>Pending orders</Link></li>
             <li><Link href={''}>Completed orders</Link></li>
           </ul>

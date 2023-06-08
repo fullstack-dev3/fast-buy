@@ -24,23 +24,23 @@ export default function AdminSidebar() {
             </Link>
           </li>
           <li className='py-3 px-1 mb-3'>
-            <Link href={''} className='flex items-center justify-center'>
+            <Link href={'/categories'} className='flex items-center justify-center'>
               <BiCategory className='mx-2' /> Categories
             </Link>
           </li>
           <li className='py-3 px-1 mb-3'>
-            <Link href={'/category/add-category'} className='flex items-center justify-center'>
+            <Link href={'/categories/add-category'} className='flex items-center justify-center'>
               <IoIosAddCircle className='mx-2' /> Add Category
             </Link>
           </li>
           <li className='py-3 px-1 mb-3'>
-            <Link href={''} className='flex items-center justify-center'>
+            <Link href={'/products'} className='flex items-center justify-center'>
               <GiLoincloth className='mx-2' /> Products
             </Link>
           </li>
           <li className='py-3 px-1 mb-3'>
-            <Link href={'/product/add-product'} className='flex items-center justify-center'>
-              <IoIosAddCircle className='mx-2' /> Add Products
+            <Link href={'/products/add-product'} className='flex items-center justify-center'>
+              <IoIosAddCircle className='mx-2' /> Add Product
             </Link>
           </li>
           <li className='py-3 px-1 mb-3'>
