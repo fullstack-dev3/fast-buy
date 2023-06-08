@@ -17,14 +17,14 @@ type Inputs = {
   slug: string,
 }
 
-const uploadImages = async (file: File) => {
-  const createFileName = () => {
-    const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 8);
-    return `${file?.name}-${timestamp}-${randomString}`;
-  }
+let fileName = '';
 
-  const fileName = createFileName();
+const uploadImages = async (slug: string, file: File) => {
+  const orgName = file?.name.split('.');
+  const ext = orgName[orgName.length - 1];
+
+  fileName = slug + '-' + Math.random().toString(36).substring(2, 8) + '.' + ext;
+
   const storageRef = ref(storage, `ecommerce/category/${fileName}`);
   const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -67,11 +67,12 @@ export default function AddCategory() {
       return toast.error('Image size must be less then 1MB');
     }
 
-    const uploadImageToFirebase = await uploadImages(data.image[0]);
+    const uploadImageToFirebase = await uploadImages(data.slug, data.image[0]);
     const finalData = {
       name : data.name,
       description : data.description,
       image : uploadImageToFirebase,
+      fileName: fileName,
       slug : data.slug
     };
 

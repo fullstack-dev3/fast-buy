@@ -3,9 +3,14 @@
 import React from 'react';
 import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
+import { ref, deleteObject  } from 'firebase/storage';
 import Image from 'next/image';
-import { get_all_categories } from '@/Services/Admin/category';
+import { storage } from '@/utils/Firebase';
+import {
+  get_all_categories,
+  delete_a_category
+} from '@/Services/Admin/category';
 import Loading from '@/app/loading';
 import AdminNavbar from '@/components/AdminNavbar';
 import AdminSidebar from '@/components/AdminSidebar';
@@ -15,13 +20,14 @@ type CategoryData = {
   name: string;
   description: string;
   image: string;
+  fileName: string;
   slug: string;
   createdAt: string;
   updatedAt: string;
 };
 
 export default function Categories() {
-  const { data, isLoading } = useSWR('/api/admin/category', get_all_categories);
+  const { data, isLoading } = useSWR('/gettingAllCategories', get_all_categories);
 
   if (data?.success !== true) {
     toast.error(data?.message);
@@ -50,7 +56,7 @@ export default function Categories() {
             Update
           </button>
           <button
-            onClick={() => handleDeleteCategory(row?._id)}
+            onClick={() => handleDeleteCategory(row?._id, row?.fileName)}
             className=' w-20 py-2 mx-2 text-xs text-red-600 hover:text-white my-2 hover:bg-red-600 border border-red-600 rounded transition-all duration-700'
           >
             Delete
@@ -64,8 +70,19 @@ export default function Categories() {
     console.log(id)
   }
 
-  const handleDeleteCategory = (id : string)  => {
-    console.log(id)
+  const handleDeleteCategory = async (id: string, fileName: string)  => {
+    const storageRef = ref(storage, `ecommerce/category/${fileName}`);
+    
+    await deleteObject(storageRef);
+
+    const res = await delete_a_category(id);
+
+    if (res?.success) {
+      toast.success(res?.message);
+      mutate('/gettingAllCategories')
+    } else {
+      toast.error(res?.message);
+    }
   }
 
   return (

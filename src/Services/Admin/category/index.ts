@@ -35,3 +35,20 @@ export const get_all_categories = async () => {
     console.log('Error in getting all Categories (service) =>', error)
   }
 }
+
+export const delete_a_category = async (id: string) => {
+  try {
+    const res = await fetch(`/api/Admin/category/delete-category?id=${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${Cookies.get('token')}`
+      },
+    });
+
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    console.log('Error in deleting Categories (service) =>', error)
+  }
+}
