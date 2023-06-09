@@ -6,6 +6,7 @@ import DataTable from 'react-data-table-component';
 import useSWR, { mutate } from 'swr';
 import { ref, deleteObject  } from 'firebase/storage';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { storage } from '@/utils/Firebase';
 import {
   get_all_categories,
@@ -27,6 +28,8 @@ type CategoryData = {
 };
 
 export default function Categories() {
+  const router =  useRouter();
+
   const { data, isLoading } = useSWR('/gettingAllCategories', get_all_categories);
 
   if (data?.success !== true) {
@@ -50,7 +53,7 @@ export default function Categories() {
       cell: (row: CategoryData) => (
         <div className='flex items-center justify-start px-2 h-20'>
           <button
-            onClick={() => handleUpdateCategory(row?._id)}
+            onClick={() => router.push(`/categories/update-category/${row?._id}`)}
             className=' w-20 py-2 mx-2 text-xs text-green-600 hover:text-white my-2 hover:bg-green-600 border border-green-600 rounded transition-all duration-700'
           >
             Update
@@ -65,10 +68,6 @@ export default function Categories() {
       )
     },
   ];
-
-  const handleUpdateCategory = (id : string)  => {
-    console.log(id)
-  }
 
   const handleDeleteCategory = async (id: string, fileName: string)  => {
     const storageRef = ref(storage, `ecommerce/category/${fileName}`);

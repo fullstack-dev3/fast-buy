@@ -3,27 +3,26 @@ import AuthCheck from "@/middleware/AuthCheck";
 import Category from "@/model/Category";
 import connectDB from "@/DB/connectDB";
 
-export async function DELETE(req: Request) {
+export async function PUT(req: Request) {
   try {
     await connectDB();
     const isAuthenticated = await AuthCheck(req);
 
     if (isAuthenticated === 'admin') {
-      const { searchParams } = new URL(req.url);
-      const id = searchParams.get('id');
+      const data = await req.json();
+      const  {_id, name, description, slug} = data;
 
-      const deleteData = await Category.findByIdAndDelete(id);
-
-      if (deleteData) {
-        return NextResponse.json({ success: true, message: "Category Deleted successfully!" });
+      const saveData = await Category.findOneAndUpdate({ _id }, {name, description, slug}, { new: true });
+      if (saveData) {
+        return NextResponse.json({ success: true, message: "Category updated successfully!" });
       } else {
-        return NextResponse.json({ success: false, message: "Failed to Delete the category. Please try again!" });
+        return NextResponse.json({ success: false, message: "Failed to update the category. Please try again!" });
       }
     } else {
       return NextResponse.json({ success: false, message: "You are not authorized." });
     }
   } catch (error) {
-    console.log('Error in deleting a new category:', error);
+    console.log('Error in update a new category:', error);
     return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
   }
 }
