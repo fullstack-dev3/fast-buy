@@ -1,12 +1,19 @@
+"use client"
+
 import React from 'react';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function AdminNavbar() {
+  const router =  useRouter();
+
   const handleLogout = () => {
     Cookies.remove('token');
-    localStorage.removeItem('user');
+    localStorage.clear();
+
+    router.push('/');
   }
 
   return (
@@ -25,8 +32,8 @@ export default function AdminNavbar() {
             <li><Link href={'/categories/add-category'}>Add Category</Link></li>
             <li><Link href={'/products'}>Products</Link></li>
             <li><Link href={'/products/add-product'}>Add Product</Link></li>
-            <li><Link href={''}>Pending orders</Link></li>
-            <li><Link href={''}>Completed orders</Link></li>
+            <li><Link href={'/'}>Pending orders</Link></li>
+            <li><Link href={'/'}>Completed orders</Link></li>
           </ul>
         </div>
       </div>
@@ -42,13 +49,13 @@ export default function AdminNavbar() {
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <Link href={''} className="justify-between">
+              <Link href={'/'} className="justify-between">
                 Profile
                 <span className="badge">New</span>
               </Link>
             </li>
             <li onClick={handleLogout}>
-              <Link href={''}>Logout</Link>
+              <button> Logout </button>
             </li>
           </ul>
         </div>
