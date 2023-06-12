@@ -37,7 +37,7 @@ export default function Page({ params}: { params: pageParam }) {
   const [loader, setLoader] = useState(false)
   const [catData, setCatData] = useState<CategoryData | null>(null);
 
-  const { data, isLoading } = useSWR('/gettingAllCategoriesFOrAdmin', () =>
+  const { data, isLoading } = useSWR('/gettingCategoryByID', () =>
     get_category_by_id(params.id)
   );
 

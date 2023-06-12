@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import AuthCheck from "@/middleware/AuthCheck";
-import Category from "@/model/Category";
+import Product from "@/model/Product";
 import connectDB from "@/DB/connectDB";
 
 export async function DELETE(req: Request) {
@@ -13,21 +13,21 @@ export async function DELETE(req: Request) {
       const id = searchParams.get('id');
 
       if (!id) {
-        return NextResponse.json({ success: true, message: "Category ID is Required" });
+        return NextResponse.json({ success: true, message: "Product ID is Required" });
       }
 
-      const deleteData = await Category.findByIdAndDelete(id);
+      const deleteData = await Product.findByIdAndDelete(id);
 
       if (deleteData) {
-        return NextResponse.json({ success: true, message: "Category Deleted successfully!" });
+        return NextResponse.json({ success: true, message: "Product Deleted successfully!" });
       } else {
-        return NextResponse.json({ success: false, message: "Failed to Delete the category. Please try again!" });
+        return NextResponse.json({ success: false, message: "Failed to Delete the Product. Please try again!" });
       }
     } else {
       return NextResponse.json({ success: false, message: "You are not authorized." });
     }
   } catch (error) {
-    console.log('Error in deleting a new category:', error);
+    console.log('Error in deleting a new Product:', error);
     return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
   }
 }

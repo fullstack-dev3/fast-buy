@@ -2,8 +2,19 @@ import { NextResponse } from "next/server";
 import AuthCheck from "@/middleware/AuthCheck";
 import Product from "@/model/Product";
 import connectDB from "@/DB/connectDB";
+import Joi from "joi";
 
-export const dynamic  = 'force-dynamic'
+const ProductSchema  = Joi.object({
+  name: Joi.string().required(),
+  description: Joi.string().required(),
+  image: Joi.string().required(),
+  fileName: Joi.string().required(),
+  quantity: Joi.number().required(),
+  slug: Joi.string().required(),
+  price: Joi.number().required(),
+  featured: Joi.boolean().required(),
+  category: Joi.required()
+});
 
 export async function POST(req: Request) {
   try {
@@ -12,6 +23,38 @@ export async function POST(req: Request) {
 
     if (isAuthenticated === 'admin') {
       const data = await req.json();
+
+      const {
+        name,
+        description,
+        image,
+        fileName,
+        quantity,
+        slug,
+        price,
+        featured,
+        category
+      } = data;
+
+      const { error } = ProductSchema.validate({
+        name,
+        description,
+        image,
+        fileName,
+        quantity,
+        slug,
+        price,
+        featured,
+        category
+      });
+
+      if (error) {
+        return NextResponse.json({
+          success: false,
+          message: error.details[0].message.replace(/['"]+/g, '')
+        });
+      }
+
       const saveData = await Product.create(data);
 
       if (saveData) {
