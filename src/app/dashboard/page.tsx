@@ -1,13 +1,13 @@
 "use client"
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import AdminNavbar from '@/components/AdminNavbar';
 import AdminSidebar from '@/components/AdminSidebar';
 import StatsTiles from '@/components/StatsTiles';
-import data from '@/Tiles';
+import GetTilesData from '@/app/tilesDatas/Tiles';
 
 interface userData {
   _id: string,
@@ -18,6 +18,8 @@ interface userData {
 
 export default function Dashboard() {
   const Router = useRouter();
+
+  const data = GetTilesData();
 
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
@@ -34,8 +36,10 @@ export default function Dashboard() {
         <div className='w-full grid grid-cols-2 md:grid-cols-3 px-4 py-2'>
           {data?.map((tile, index) => {
             return (
-              <StatsTiles key={index}
+              <StatsTiles
+                key={index}
                 Icon={tile.icon}
+                color={tile.color}
                 title={tile.title}
                 count={tile.count}
               />
