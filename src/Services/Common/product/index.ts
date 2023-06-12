@@ -25,3 +25,17 @@ export const get_product_by_id = async (id:string) => {
     console.log('Error in getting product by ID (service) =>', error);
   }
 }
+
+export const get_product_by_category = async (id: string) => {
+  try {
+    const res = await fetch(`/api/common/product/get-product-by-category?id=${id}`, {
+      method: 'GET',
+    });
+
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    console.log('Error in getting product by category ID (service) =>', error)
+  }
+}

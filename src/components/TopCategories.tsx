@@ -34,6 +34,7 @@ export default function TopCategories() {
               return (
                 <CategoryCard
                   key={item?._id}
+                  _id={item?._id}
                   name={item?.name}
                   description={item?.description}
                   image={item?.image}
