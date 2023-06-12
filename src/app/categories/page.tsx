@@ -8,10 +8,8 @@ import { ref, deleteObject  } from 'firebase/storage';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { storage } from '@/utils/Firebase';
-import {
-  get_all_categories,
-  delete_a_category
-} from '@/Services/Admin/category';
+import { get_all_categories } from '@/Services/Common/category';
+import { delete_a_category } from '@/Services/Admin/category';
 import Loading from '@/app/loading';
 import AdminNavbar from '@/components/AdminNavbar';
 import AdminSidebar from '@/components/AdminSidebar';

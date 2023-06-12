@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '@/utils/Firebase';
-import { get_all_categories } from '@/Services/Admin/category';
+import { get_all_categories } from '@/Services/Common/category';
 import { add_new_product } from '@/Services/Admin/product';
 
 type CategoryData = {

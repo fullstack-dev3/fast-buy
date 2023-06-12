@@ -10,10 +10,10 @@ import StatsTiles from '@/components/StatsTiles';
 import data from '@/Tiles';
 
 interface userData {
-  name: String
-  email: String, 
-  role: String , 
-  _id: String,
+  _id: string,
+  name: string,
+  email: string, 
+  role: string, 
 }
 
 export default function Dashboard() {

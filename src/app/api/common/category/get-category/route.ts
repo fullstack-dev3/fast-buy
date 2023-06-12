@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import AuthCheck from "@/middleware/AuthCheck";
 import Category from "@/model/Category";
 import connectDB from "@/DB/connectDB";
-import Product from "@/model/Product";
 
 export async function GET(req: Request) {
   try {
@@ -14,17 +12,13 @@ export async function GET(req: Request) {
     }
 
     await connectDB();
-    const isAuthenticated = await AuthCheck(req);
-    if (isAuthenticated) {
-      const getData = await Product.findById(id).populate('category' ,' name slug _id')
-      
-      if (getData) {
-        return NextResponse.json({success  :true , data : getData});
-      } else {
-        return NextResponse.json({status: 204 , success: false, message: 'No Product found.' });
-      }
+
+    const getData = await Category.findById(id);
+
+    if (getData) {
+      return NextResponse.json({success  :true , data : getData});
     } else {
-      return NextResponse.json({status: 401 , success: false, message: "You are not authorized." });
+      return NextResponse.json({status: 204 , success: false, message: 'No categories found.' });
     }
   } catch (error) {
     console.log('Error in getting  categories by id:', error);

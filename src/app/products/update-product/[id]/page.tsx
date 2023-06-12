@@ -8,8 +8,9 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { get_all_categories } from '@/Services/Admin/category';
-import { get_product_by_id , update_a_product } from '@/Services/Admin/product';
+import { get_all_categories } from '@/Services/Common/category';
+import { get_product_by_id } from '@/Services/Common/product';
+import { update_a_product } from '@/Services/Admin/product';
 
 type CategoryData = {
   _id: string;

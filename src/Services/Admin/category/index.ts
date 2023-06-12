@@ -19,40 +19,6 @@ export const add_new_category = async (formData: any) => {
   }
 }
 
-export const get_all_categories = async () => {
-  try {
-    const res = await fetch(`/api/Admin/category`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${Cookies.get('token')}`
-      },
-    });
-
-    const data = await res.json();
-
-    return data;
-  } catch (error) {
-    console.log('Error in getting all Categories (service) =>', error)
-  }
-}
-
-export const get_category_by_id = async (id:string) => {
-  try {
-    const res = await fetch(`/api/Admin/category/get-category?id=${id}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${Cookies.get('token')}`
-      },
-    });
-
-    const data = await res.json();
-
-    return data;
-  } catch (error) {
-    console.log('Error in getting Category by ID (service) =>', error)
-  }
-}
-
 export const update_a_category = async (formData : any) => {
   try {
     const res = await fetch(`/api/Admin/category/update-category`, {

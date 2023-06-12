@@ -8,7 +8,8 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import {  get_category_by_id, update_a_category } from '@/Services/Admin/category';
+import { get_category_by_id } from '@/Services/Common/category';
+import { update_a_category } from '@/Services/Admin/category';
 
 type Inputs = {
   name: string,
