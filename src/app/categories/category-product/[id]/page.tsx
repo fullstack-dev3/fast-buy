@@ -72,6 +72,7 @@ export default function Page({ params }: { params: pageParam }) {
             product?.map((item: ProductData) => (
               <ProductCard
                 key={item?._id}
+                _id={item?._id}
                 name = {item?.name}
                 description={item?.description}
                 price = {item?.price}

@@ -37,6 +37,7 @@ export default function FeaturedProduct() {
                   return (
                     <ProductCard
                       key={item?._id}
+                      _id={item?._id}
                       name={item?.name}
                       description={item?.description}
                       image={item?.image}
