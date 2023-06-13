@@ -1,9 +1,10 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { TailSpin } from 'react-loader-spinner';
 import { ToastContainer, toast } from 'react-toastify';
+import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -15,6 +16,13 @@ type Inputs = {
   description: string,
   image: Array<File>,
   slug: string,
+}
+
+interface userData {
+  _id: String,
+  name: String,
+  email: String,
+  role: String,
 }
 
 let fileName = '';
@@ -53,6 +61,13 @@ export default function AddCategory() {
   const Router =  useRouter();
 
   const [loader, setLoader] = useState(false);
+
+  useEffect(() => {
+    const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!Cookies.get('token') || user?.role !== 'admin') {
+      Router.push('/');
+    }
+  }, [Router]);
 
   const { register, formState: { errors }, handleSubmit } = useForm<Inputs>({
     criteriaMode: "all"

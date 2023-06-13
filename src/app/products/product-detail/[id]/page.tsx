@@ -46,7 +46,7 @@ export default function Page({ params }: { params: pageParam }) {
   }, [data]);
 
   return (
-    <div className='w-full h-screen bg-gray-200 py-4 px-2'>
+    <div className='w-full h-full lg:h-screen bg-gray-200 py-4 px-2'>
       <div className="text-sm breadcrumbs  border-b-2 py-2 px-2 border-b-orange-600">
         <ul>
           <li>
@@ -67,40 +67,42 @@ export default function Page({ params }: { params: pageParam }) {
           </li>
         </ul>
       </div>
-      <div className='w-full  h-4/5 py-4 px-4 flex items-center justify-center'>
+      <div className='w-full h-full lg:h-4/5 py-4 px-4 flex items-center justify-center'>
         {isLoading
           ?
             <div className='w-4/5 bg-gray-100 rounded-xl h-4/5 flex items-center justify-center shadow-2xl '>
               <Loading />
             </div>
           :
-            <div className='w-4/5 bg-gray-100 rounded-xl h-4/5 flex items-center justify-center shadow-2xl  '>
-              <div className='w-4/12 h-full  rounded-xl relative'>
-                  <Image src={prodData?.image || ''} alt='no image' fill className='rounded-xl' />
+            <div className='w-full h-full lg:w-4/5 lg:h-4/5 bg-gray-100 rounded-xl flex flex-col lg:flex-row items-center justify-center shadow-2xl'>
+              <div className='w-full h-60 lg:w-4/12 lg:h-full rounded-xl z-10 relative'>
+                {prodData?.image &&
+                  <Image src={prodData.image} alt='no image' fill className='rounded-xl' />
+                }
               </div>
-              <div className='w-8/12 h-full  rounded flex flex-col px-5 py-2'>
-                <div className='flex justify-between w-full h-20 items-center'>
+              <div className='w-full h-full lg:w-8/12 rounded flex flex-col px-3 py-2 lg:px-5'>
+                <div className='w-full md:h-20 flex flex-col lg:flex-row md:justify-between py-2 items-center'>
                   <h1 className='text-3xl font-semibold text-black'>{prodData?.name}</h1>
                   {
                     prodData?.featured &&
-                    <p className='px-3 py-2 bg-orange-600 font-semibold tracking-widest rounded text-white flex items-center justify-center '>
+                    <p className='px-3 py-2 lg:flex bg-orange-600 hidden font-semibold tracking-widest rounded text-white items-center justify-center'>
                       <FaProductHunt className='mx-2' />
                       Featured Product
                     </p>
                   }
                 </div>
-                <p className=' py-2 h-40 w-full'>{prodData?.description}</p>
+                <p className='w-full lg:h-40 py-2'>{prodData?.description}</p>
                 <h1 className='text-3xl font-semibold text-black py-2'>
                   $ {`${prodData?.price.toFixed(2)}`}
                 </h1>
-                <div className='w-full py-2 flex'>
+                <div className='w-full py-2 lg:flex-row flex-col flex'>
                   <button
-                    className='btn m-2 w-52 h-10 btn-outline btn-success flex items-center justify-center'
+                    className='btn m-2 lg:w-52 h-10 btn-outline btn-success flex items-center justify-center'
                   >
                     <BiCartAdd className='text-3xl mx-2' /> Add to Cart
                   </button>
                   <button
-                    className='btn m-2  w-52 h-10 btn-outline btn-success flex items-center justify-center'
+                    className='btn m-2 lg:w-52 h-10 btn-outline btn-success flex items-center justify-center'
                   >
                     <RiBookMarkFill className='text-3xl mx-2' /> Bookmark
                   </button>

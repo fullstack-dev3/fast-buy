@@ -28,7 +28,7 @@ type ProductData = {
 
 export default function Page({ params }: { params: pageParam }) {
   const [catName, setCatName] = useState('');
-  const [product, setProdData] = useState<ProductData[] | null>([]);
+  const [product, setProdData] = useState<ProductData[] | []>([]);
 
   const { data: catData } = useSWR('/gettingCategoryByID',
     () => get_category_by_id(params.id)
@@ -50,7 +50,7 @@ export default function Page({ params }: { params: pageParam }) {
   }, [prodData]);
 
   return (
-    <div className='w-full h-screen bg-gray-50 py-4 px-2 '>
+    <div className='w-full h-full bg-gray-50 py-4 px-2 '>
       <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
         <ul>
           <li>
@@ -65,7 +65,7 @@ export default function Page({ params }: { params: pageParam }) {
           </li>
         </ul>
       </div>
-      <div className='w-full h-5/6  flex items-start justify-center flex-wrap overflow-auto'>
+      <div className='w-full h-full flex items-start justify-center flex-wrap overflow-auto'>
         {isLoading
           ? <Loading />
           : (
