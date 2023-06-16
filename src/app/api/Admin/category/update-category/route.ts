@@ -22,7 +22,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ success: false, message: "You are not authorized." });
     }
   } catch (error) {
-    console.log('Error in update a new category:', error);
+    console.log('Error in update a category:', error);
     return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
   }
 }

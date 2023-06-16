@@ -17,7 +17,7 @@ export default function AdminNavbar() {
   }
 
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar dark:text-black bg-white">
       <div className="flex-1">
         <div className="dropdown md:hidden">
           <label tabIndex={0} className="btn btn-active btn-circle">
@@ -25,7 +25,7 @@ export default function AdminNavbar() {
           </label>
           <ul
             tabIndex={0}
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+            className="menu menu-compact dropdown-content mt-3 p-2 shadow text-black bg-gray-50 rounded-box w-52"
           >
             <li><Link href={'/dashboard'}>Homepage</Link></li>
             <li><Link href={'/categories'}>Categories</Link></li>
@@ -46,7 +46,7 @@ export default function AdminNavbar() {
           </label>
           <ul
             tabIndex={0}
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-gray-50 rounded-box w-52"
           >
             <li>
               <Link href={'/'} className="justify-between">

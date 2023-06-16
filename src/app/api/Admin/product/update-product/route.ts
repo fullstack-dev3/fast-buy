@@ -36,15 +36,15 @@ export async function PUT(req: Request) {
       }, { new: true });
 
       if (saveData) {
-        return NextResponse.json({ success: true, message: "product  updated successfully!" });
+        return NextResponse.json({ success: true, message: "Product updated successfully!" });
       } else {
-        return NextResponse.json({ success: false, message: "Failed to update the product . Please try again!" });
+        return NextResponse.json({ success: false, message: "Failed to update a product . Please try again!" });
       }
     } else {
       return NextResponse.json({ success: false, message: "You are not authorized." });
     }
   } catch (error) {
-    console.log('Error in update a new product :', error);
+    console.log('Error in update a product :', error);
     return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
   }
 }

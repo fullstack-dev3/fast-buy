@@ -44,8 +44,9 @@ export default function ForgetPassword() {
       setLoding(false);
 
       toast.success(res.message);
+
       setTimeout(() => {
-        Router.push('/auth/login')
+        Router.push('/auth/login');
       }, 1000);
     } else {
       setLoding(false);
@@ -57,7 +58,7 @@ export default function ForgetPassword() {
     <>
       <Navbar />
 
-      <section className="bg-base-100  text-center">
+      <section className="bg-gray-50 text-center">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
           <div className="w-full p-6 bg-white rounded-lg shadow  md:mt-0 sm:max-w-md  sm:p-8">
             <h2 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
@@ -119,8 +120,6 @@ export default function ForgetPassword() {
                       radius="1"
                       visible={true}
                       width="20"
-                      wrapperStyle={{}}
-                      wrapperClass=""
                     />
                   </button>
                 :

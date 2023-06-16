@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 export default function AdminSidebar() {
   return (
-    <div className='w-60 hidden md:block bg-white h-full'>
+    <div className='w-60 hidden md:block bg-white h-full dark:text-black'>
       <div className='w-full text-center py-2 px-2 h-20'>
         <h1 className='flex text-2xl font-semibold items-center justify-center'>
           <RxDashboard className='mx-2' /> Dashboard
@@ -44,12 +44,12 @@ export default function AdminSidebar() {
             </Link>
           </li>
           <li className='py-3 px-1 mb-3'>
-            <Link href={''} className='flex items-center justify-center'>
+            <Link href={'/'} className='flex items-center justify-center'>
               <MdOutlinePendingActions className='mx-2' /> Pending Order
             </Link>
           </li>
           <li className='py-3 px-1 mb-3'>
-            <Link href={''} className='flex items-center justify-center'>
+            <Link href={'/'} className='flex items-center justify-center'>
               <GrCompliance className='mx-2' /> Completed Order
             </Link>
           </li>

@@ -46,7 +46,7 @@ export default function Page({ params }: { params: pageParam }) {
   }, [data]);
 
   return (
-    <div className='w-full h-full lg:h-screen bg-gray-200 py-4 px-2'>
+    <div className='w-full h-full dark:text-black lg:h-screen bg-gray-50 py-4 px-2'>
       <div className="text-sm breadcrumbs  border-b-2 py-2 px-2 border-b-orange-600">
         <ul>
           <li>

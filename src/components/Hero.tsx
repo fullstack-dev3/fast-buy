@@ -18,7 +18,7 @@ export default function Hero() {
           fill
           style={{ objectFit: 'cover' }}
         />
-        <button className='btn btn-success border border-orange-600 text-white/90 hover:bg-orange-600  z-40'>
+        <button className='btn btn-ghost border border-orange-600 text-white/90 hover:bg-orange-600 z-40'>
           Shop Now
         </button>
       </div>

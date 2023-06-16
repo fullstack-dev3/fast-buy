@@ -114,7 +114,7 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
   }
 
   return (
-    <div className='w-full p-4 min-h-screen  bg-gray-50 flex flex-col '>
+    <div className='w-full p-4 min-h-screen bg-gray-50 flex flex-col dark:text-black'>
       <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
         <ul>
           <li>
@@ -269,5 +269,3 @@ export default function Page({ params, searchParams }: { params: pageParam, sear
     </div >
   )
 }
-
-

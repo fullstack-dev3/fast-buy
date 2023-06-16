@@ -103,7 +103,7 @@ export default function Products() {
   }
 
   return (
-    <div className='w-full min-h-screen flex bg-base-200'>
+    <div className='w-full min-h-screen flex bg-gray-50'>
       <AdminSidebar />
       <div className='w-full min-h-screen'>
         <AdminNavbar />

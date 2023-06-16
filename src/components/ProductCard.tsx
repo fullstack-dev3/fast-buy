@@ -16,7 +16,7 @@ export default function ProductCard({ _id, name, description, image, price }: Pr
 
   return (
     <div
-      className="card cursor-pointer card-compact m-3 w-80 bg-gray-50 shadow-xl relative"
+      className="card cursor-pointer card-compact m-3 w-80 bg-white shadow-xl relative text-black"
       onClick={() => router.push(`/products/product-detail/${_id}`)}
     >
       <div className='w-full rounded relative h-60'>

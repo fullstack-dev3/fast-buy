@@ -16,12 +16,12 @@ export async function GET(req: Request) {
     const getData = await Category.findById(id);
 
     if (getData) {
-      return NextResponse.json({success  :true , data : getData});
+      return NextResponse.json({success: true , data: getData});
     } else {
-      return NextResponse.json({status: 204 , success: false, message: 'No categories found.' });
+      return NextResponse.json({status: 204 , success: false, message: 'No category found.' });
     }
   } catch (error) {
-    console.log('Error in getting  categories by id:', error);
+    console.log('Error in getting category by id:', error);
     return NextResponse.json({status : 500 , success: false, message: 'Something went wrong. Please try again!' });
   }
 }

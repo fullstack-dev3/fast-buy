@@ -50,7 +50,7 @@ export default function Page({ params }: { params: pageParam }) {
   }, [prodData]);
 
   return (
-    <div className='w-full h-full bg-gray-50 py-4 px-2 '>
+    <div className='w-full h-full bg-gray-50 py-4 px-2 dark:text-black'>
       <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
         <ul>
           <li>

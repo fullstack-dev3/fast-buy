@@ -21,7 +21,7 @@ export async function GET(req: Request) {
       return NextResponse.json({status: 204 , success: false, message: 'No Product found.' });
     }
   } catch (error) {
-    console.log('Error in getting  categories by id:', error);
+    console.log('Error in getting product by id:', error);
     return NextResponse.json({status : 500 , success: false, message: 'Something went wrong. Please try again!' });
   }
 }

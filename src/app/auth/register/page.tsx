@@ -18,7 +18,7 @@ export default function  Register (){
       router.push('/');
     }
   },[router]);
-  
+
   const [formData, setFormData] = useState({ email: "", password: "" , name : "" });
   const [error, setError] = useState({ email: "", password: "", name: '' });
   const [loading , setLoding] = useState(false);
@@ -61,9 +61,9 @@ export default function  Register (){
     <>
       <Navbar />
 
-      <div className='w-full h-screen bg-base-100 '>
+      <div className='w-full h-screen bg-gray-50 '>
         <div className="flex flex-col text-center items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0 shadow-xl">
-          <div className="w-full bg-white rounded-lg shadow dark:border text-black md:mt-0 sm:max-w-md xl:p-0 ">
+          <div className="w-full bg-white rounded-lg shadow text-black md:mt-0 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
                 Register your account
@@ -116,7 +116,7 @@ export default function  Register (){
                   ?
                     <button
                       type="button"
-                      className="w-full flex items-center justify-center text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+                      className="w-full flex items-center justify-center text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                     >
                       <TailSpin
                         ariaLabel="tail-spin-loading"
@@ -125,20 +125,19 @@ export default function  Register (){
                         radius="1"
                         visible={true}
                         width="20"
-                        wrapperStyle={{}}
-                        wrapperClass=""
                       />
                     </button>
                   :
                     <button
                       type="submit"
-                      className="w-full text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800">
-                        Sign up
-                      </button>
+                      className="w-full text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                    >
+                      Sign up
+                    </button>
                 }
                 <p className="text-sm  text-gray-500 ">
                   Already have an account
-                  <Link href="/auth/login" className="ml-1 font-medium text-orange-600 hover:underline ">
+                  <Link href={"/auth/login"} className="ml-1 font-medium text-orange-600 hover:underline ">
                     Sign in
                   </Link>
                 </p>

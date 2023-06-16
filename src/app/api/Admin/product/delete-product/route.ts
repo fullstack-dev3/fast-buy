@@ -21,13 +21,13 @@ export async function DELETE(req: Request) {
       if (deleteData) {
         return NextResponse.json({ success: true, message: "Product Deleted successfully!" });
       } else {
-        return NextResponse.json({ success: false, message: "Failed to Delete the Product. Please try again!" });
+        return NextResponse.json({ success: false, message: "Failed to Delete a Product. Please try again!" });
       }
     } else {
       return NextResponse.json({ success: false, message: "You are not authorized." });
     }
   } catch (error) {
-    console.log('Error in deleting a new Product:', error);
+    console.log('Error in deleting a Product:', error);
     return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
   }
 }

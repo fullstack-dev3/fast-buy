@@ -36,7 +36,7 @@ export default function Page({ params}: { params: pageParam }) {
   const Router = useRouter();
 
   const [loader, setLoader] = useState(false)
-  const [catData, setCatData] = useState<CategoryData | null>(null);
+  const [catData, setCatData] = useState<CategoryData | undefined>(undefined);
 
   const { data, isLoading } = useSWR('/gettingCategoryByID', () =>
     get_category_by_id(params.id)
@@ -88,7 +88,7 @@ export default function Page({ params}: { params: pageParam }) {
   }
 
   return (
-    <div className='w-full p-4 min-h-screen  bg-base-200 flex flex-col '>
+    <div className='w-full p-4 min-h-screen bg-gray-50 flex flex-col dark:text-black'>
       <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
         <ul>
           <li>
@@ -118,7 +118,7 @@ export default function Page({ params}: { params: pageParam }) {
               width="50"
             />
             <p className='text-sm mt-2 font-semibold text-orange-500'>
-              Adding Category Hold Tight ....
+              Updating Category Hold Tight ....
             </p>
           </div>
         ) : (
