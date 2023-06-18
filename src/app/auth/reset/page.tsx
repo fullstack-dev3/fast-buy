@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, FormEvent } from 'react';
+import React, { useEffect, useState, FormEvent } from 'react';
 import { TailSpin } from 'react-loader-spinner';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,6 +14,12 @@ export default function ForgetPassword() {
   const [formData, setFormData] = useState({ email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState({ email: "", password: "", confirmPassword: "" });
   const [loading, setLoding] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      Router.push('/');
+    }
+  });
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

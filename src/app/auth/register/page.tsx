@@ -6,7 +6,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 import Navbar from '@/components/Navbar';
 import { register_me } from '@/Services/auth';
 
@@ -14,10 +13,10 @@ export default function  Register (){
   const router = useRouter();
 
   useEffect(() => {
-    if (Cookies.get('token')) {
+    if (localStorage.getItem('user')) {
       router.push('/');
     }
-  },[router]);
+  });
 
   const [formData, setFormData] = useState({ email: "", password: "" , name : "" });
   const [error, setError] = useState({ email: "", password: "", name: '' });

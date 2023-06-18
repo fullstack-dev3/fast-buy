@@ -20,6 +20,12 @@ export default function Login() {
   const [error, setError] = useState({ email: "", password: "" });
   const [loading, setLoding] = useState<Boolean>(false);
 
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      Router.push('/');
+    }
+  });
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
