@@ -1,14 +1,15 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 
 export default function Navbar() {
   const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [Scrolled, setScrolled] = useState(false);
   const [userisLoggedIn, setUserIsLoggedIn] = useState(false);
@@ -24,25 +25,27 @@ export default function Navbar() {
     if (localStorage.getItem('user')) {
       setUserIsLoggedIn(true);
     }
-  }, [setUserIsLoggedIn]);
+    setIsLoading(false);
+  }, []);
 
   const handleLogout = () => {
     Cookies.remove('token');
     localStorage.clear();
     setUserIsLoggedIn(false);
+    setMenuOpen(false);
   }
 
   return (
     <>
       <nav className={`navbar bg-purple-500 fixed justify-between text-white top-0 left-0 z-50`}>
-        <div className="flex-shrink-0 ml-2 mr-6">
+        <Link href="/" className="flex-shrink-0 ml-2 mr-6">
           <Image
             src={'/logo.png'}
             alt='no Image'
             height={40}
             width={200}
           />
-        </div>
+        </Link>
         <div className="block sm:hidden">
           <button
             className="flex items-center px-3 py-2 border rounded text-purple-200 border-purple-400 hover:text-white hover:border-white"
@@ -56,9 +59,6 @@ export default function Navbar() {
         <div className="w-full hidden sm:block sm:flex-grow sm:flex sm:items-center sm:w-auto">
           <div className="text-sm sm:flex-grow">
             <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
-              Home
-            </Link>
-            <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
               Shop
             </Link>
             <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white">
@@ -66,13 +66,15 @@ export default function Navbar() {
             </Link>
           </div>
           <div>
-          {userisLoggedIn
-            ?
-              <button onClick={handleLogout} className='btn mx-2'>
-                logout
-              </button>
-            :
-              <>
+          {!isLoading && (
+            userisLoggedIn ? (
+              <div className='flex'>
+                <button onClick={handleLogout} className='btn mx-2'>
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div>
                 <button
                   className='btn btn-primary btn-sm mx-2'
                   onClick={() => router.push('/auth/register')}
@@ -85,8 +87,9 @@ export default function Navbar() {
                 >
                   Login
                 </button>
-              </>
-            }
+              </div>
+            )
+          )}
           </div>
         </div>
       </nav>
@@ -96,20 +99,36 @@ export default function Navbar() {
           style={{ marginTop: '50px' }}
         >
           <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
-            Home
-          </Link>
-          <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
             Shop
           </Link>
           <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white">
             About
           </Link>
-          <Link href="/auth/register" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white">
-            Register
-          </Link>
-          <Link href="/auth/login" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white">
-            Login
-          </Link>
+          {!isLoading && (
+            userisLoggedIn ? (
+              <a
+                className="cursor-pointer block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white"
+                onClick={handleLogout}
+              >
+                Logout
+              </a>
+            ) : (
+              <>
+                <Link
+                  href="/auth/register"
+                  className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white"
+                >
+                  Register
+                </Link>
+                <Link
+                  href="/auth/login"
+                  className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white"
+                >
+                  Login
+                </Link>
+              </>
+            )
+          )}
         </div>
       )}
     </>
