@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component';
 import useSWR, { mutate } from 'swr';
@@ -28,11 +28,18 @@ type CategoryData = {
 export default function Categories() {
   const router =  useRouter();
 
+  const [catData, setCatData] = useState<CategoryData[] | null>(null);
+  const [search, setSearch] = useState('');
+
   const { data, isLoading } = useSWR('/gettingAllCategories', get_all_categories);
 
   if (data?.success !== true) {
     toast.error(data?.message);
   }
+
+  useEffect(() => {
+    setCatData(data);
+  }, [data]);
 
   const columns = [
     {
@@ -67,6 +74,22 @@ export default function Categories() {
     },
   ];
 
+  const handleSearch = async (search: string) => {
+    setSearch(search);
+
+    if (search == '') {
+      setCatData(data);
+    } else {
+      const filteredData = data.filter((item: CategoryData) => {
+        const itemName = item?.name.toLowerCase();
+        const text = search.toLowerCase();
+        return itemName.indexOf(text) > -1;
+      });
+
+      setCatData(filteredData);
+    }
+  }
+
   const handleDeleteCategory = async (id: string, fileName: string)  => {
     const storageRef = ref(storage, `ecommerce/category/${fileName}`);
     
@@ -88,21 +111,30 @@ export default function Categories() {
       <div className='w-full min-h-screen'>
         <AdminNavbar />
         <div className='w-full px-4 py-2'>
-          {data
+          {catData
             ?
             <DataTable
               columns={columns}
-              data={data}
-              key={data?._id}
+              data={catData}
               pagination
-              title={`Total Categories : ${data?.length}`}
+              title={`Total Categories : ${catData?.length}`}
               fixedHeader
               fixedHeaderScrollHeight='100%'
               selectableRows
               selectableRowsHighlight
               persistTableHead
               progressPending={isLoading}
-              className="bg-white px-4"
+              subHeader
+              subHeaderComponent={
+                <input
+                  className='w-60 dark:bg-transparent py-2 px-2 outline-none border-b-2 border-orange-600'
+                  type={"search"}
+                  value={search}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  placeholder={"Category Name"}
+                />
+              }
+              className="bg-white px-4 h-4/6 "
             />
             : <Loading />
           }
