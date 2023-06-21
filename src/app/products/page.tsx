@@ -158,13 +158,13 @@ export default function Products() {
               subHeaderComponent={
                 <input
                   className='w-60 dark:bg-transparent py-2 px-2  outline-none  border-b-2 border-orange-600'
-                  type={"search"}
+                  type="search"
                   value={search}
                   onChange={(e) => handleSearch(e.target.value)}
-                  placeholder={"Category Name"}
+                  placeholder="Search..."
                 />
               }
-              className="bg-white px-4 h-4/6 "
+              className="bg-white"
             />
             : <Loading />
           }
