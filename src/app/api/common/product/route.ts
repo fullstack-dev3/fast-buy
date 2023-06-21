@@ -6,7 +6,7 @@ export async function GET(req: Request) {
   try {
     await connectDB();
 
-    const getData = await Product.find({});
+    const getData = await Product.find({}).populate('category', '_id name');
 
     if (getData) {
       return NextResponse.json(getData,{ status : 200 });

@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component';
 import useSWR, { mutate } from 'swr';
@@ -24,7 +24,10 @@ type ProductData = {
   price: Number,
   quantity: Number,
   featured: Boolean,
-  category: string,
+  category: {
+    _id: string,
+    name: string,
+  },
   createdAt: string;
   updatedAt: string;
 };
@@ -32,16 +35,28 @@ type ProductData = {
 export default function Products() {
   const router =  useRouter();
 
+  const [prodData, setProdData] = useState<ProductData[] | null>(null);
+  const [search, setSearch] = useState('');
+
   const { data, isLoading } = useSWR('/gettingAllProducts', get_all_products);
 
   if (data?.success !== true) {
     toast.error(data?.message);
   }
 
+  useEffect(() => {
+    setProdData(data);
+  }, [data]);
+
   const columns = [
     {
       name: 'Name',
       selector: (row: ProductData) => row?.name,
+      sortable: true,
+    },
+    {
+      name: 'Category',
+      selector: (row: ProductData) => row?.category?.name,
       sortable: true,
     },
     {
@@ -87,6 +102,24 @@ export default function Products() {
     },
   ];
 
+  const handleSearch = async (search: string) => {
+    setSearch(search);
+
+    if (search == '') {
+      setProdData(data);
+    } else {
+      const filteredData = data.filter((item: ProductData) => {
+        const itemName = item?.name.toLowerCase();
+        const catName = item?.category.name.toLowerCase();
+        const text = search.toLowerCase();
+
+        return itemName.indexOf(text) > -1 || catName.indexOf(text) > -1;
+      });
+
+      setProdData(filteredData);
+    }
+  }
+
   const handleDeleteProduct = async (id: string, fileName: string)  => {
     const storageRef = ref(storage, `ecommerce/product/${fileName}`);
     
@@ -108,21 +141,30 @@ export default function Products() {
       <div className='w-full min-h-screen'>
         <AdminNavbar />
         <div className='w-full px-4 py-2'>
-          {data
+          {prodData
             ?
             <DataTable
               columns={columns}
-              data={data}
-              key={data?._id}
+              data={prodData}
               pagination
-              title={`Total Products : ${data?.length}`}
+              title={`Total Products : ${prodData?.length}`}
               fixedHeader
               fixedHeaderScrollHeight='100%'
               selectableRows
               selectableRowsHighlight
               persistTableHead
               progressPending={isLoading}
-              className="bg-white px-4"
+              subHeader
+              subHeaderComponent={
+                <input
+                  className='w-60 dark:bg-transparent py-2 px-2  outline-none  border-b-2 border-orange-600'
+                  type={"search"}
+                  value={search}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  placeholder={"Category Name"}
+                />
+              }
+              className="bg-white px-4 h-4/6 "
             />
             : <Loading />
           }

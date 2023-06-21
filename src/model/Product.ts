@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Category from "./Category";
 
 const ProductSchema = new mongoose.Schema({
   name: String,
@@ -11,7 +12,7 @@ const ProductSchema = new mongoose.Schema({
   featured: Boolean,
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
+    ref: Category,
     required: true
   },
 }, { timestamps : true });
