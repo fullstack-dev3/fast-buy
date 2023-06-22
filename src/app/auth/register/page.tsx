@@ -4,6 +4,7 @@ import React, { useState , useEffect , FormEvent } from 'react'
 import { TailSpin } from 'react-loader-spinner';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
@@ -13,7 +14,7 @@ export default function  Register (){
   const router = useRouter();
 
   useEffect(() => {
-    if (localStorage.getItem('user')) {
+    if (localStorage.getItem('user') && Cookies.get('token')) {
       router.push('/');
     }
   });
@@ -47,9 +48,8 @@ export default function  Register (){
       setLoding(false);
 
       toast.success(data.message);
-      setTimeout(() => {
-        router.push('/auth/login');
-      }, 2000);
+
+      router.push('/auth/login');
     } else {
       setLoding(false);
       toast.error(data.message);

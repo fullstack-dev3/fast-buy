@@ -4,6 +4,7 @@ import React, { useEffect, useState, FormEvent } from 'react';
 import { TailSpin } from 'react-loader-spinner';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { forget_password } from '@/Services/auth';
@@ -16,7 +17,7 @@ export default function ForgetPassword() {
   const [loading, setLoding] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem('user')) {
+    if (localStorage.getItem('user') && Cookies.get('token')) {
       Router.push('/');
     }
   });
@@ -51,9 +52,7 @@ export default function ForgetPassword() {
 
       toast.success(res.message);
 
-      setTimeout(() => {
-        Router.push('/auth/login');
-      }, 1000);
+      Router.push('/auth/login');
     } else {
       setLoding(false);
       toast.error(res.message);

@@ -21,7 +21,7 @@ export default function Login() {
   const [loading, setLoding] = useState<Boolean>(false);
 
   useEffect(() => {
-    if (localStorage.getItem('user')) {
+    if (localStorage.getItem('user') && Cookies.get('token')) {
       Router.push('/');
     }
   });
@@ -44,15 +44,12 @@ export default function Login() {
     const res = await login_me(formData);
 
     if (res.success) {
-      setLoding(false);
-
       Cookies.set('token', res?.finalData?.token);
       localStorage.setItem('user', JSON.stringify(res?.finalData?.user));
 
-      const userData = localStorage.getItem('user');
-      const userDataString = typeof userData === 'string' ? userData : '';
+      dispatch(setUserData(res?.finalData?.user));
 
-      dispatch(setUserData(JSON.parse(userDataString)));
+      setLoding(false);
 
       if (res?.finalData?.user?.role === 'admin') {
         Router.push('/dashboard');

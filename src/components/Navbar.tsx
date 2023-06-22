@@ -22,7 +22,7 @@ export default function Navbar() {
   }, [Scrolled]);
 
   useEffect(() => {
-    if (localStorage.getItem('user')) {
+    if (localStorage.getItem('user') && Cookies.get('token')) {
       setUserIsLoggedIn(true);
     }
     setIsLoading(false);
