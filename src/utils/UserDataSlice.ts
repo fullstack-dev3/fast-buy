@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 interface UserState {
-  userData:  [] | null,
+  userData:  {} | null,
   userToken: string | null,
 }
 
@@ -20,9 +20,8 @@ export const userSlice = createSlice({
     setUserToken : (state, action) => {
       state.userToken = action.payload
     }
-    
   },
 })
 
-export const { setUserData  , setUserToken } = userSlice.actions
+export const { setUserData, setUserToken } = userSlice.actions
 export const UserReducer =  userSlice.reducer

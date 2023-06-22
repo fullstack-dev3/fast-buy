@@ -1,15 +1,16 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import {BsCartPlus , BsFillBookmarkCheckFill} from 'react-icons/bs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { add_to_cart } from '@/Services/Common/cart';
+import { RootState } from '@/Store/store';
 
-interface userData {
-  _id: String,
-  name: String,
-  email: String,
-  role: String,
+type UserData = {
+  name: string;
+  email: string;
+  _id: string;
 };
 
 type ProductData = {
@@ -23,7 +24,7 @@ type ProductData = {
 export default function ProductCard({ _id, name, description, image, price }: ProductData) {
   const router =  useRouter();
 
-  const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
+  const user = useSelector((state: RootState) => state.User.userData) as UserData | null;
 
   const AddToCart = async () => {
     const data = {

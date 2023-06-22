@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import useSWR from 'swr';
 import { BiCartAdd } from 'react-icons/bi';
@@ -13,16 +14,16 @@ import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { get_product_by_id } from '@/Services/Common/product';
 import { add_to_cart } from '@/Services/Common/cart';
+import { RootState } from '@/Store/store';
 
 interface pageParam {
   id: string
 }
 
-interface userData {
-  _id: String,
-  name: String,
-  email: String,
-  role: String,
+type UserData = {
+  _id: string,
+  name: string,
+  email: string,
 };
 
 type ProductData = {
@@ -43,7 +44,8 @@ type ProductData = {
 };
 
 export default function Page({ params }: { params: pageParam }) {
-  const [userID, setUserID] = useState<String>('');
+  const user = useSelector((state: RootState) => state.User.userData) as UserData | null;
+
   const [prodData, setprodData] = useState<ProductData | undefined>(undefined);
 
   const { data, isLoading } = useSWR('/gettingProductbyID', () => get_product_by_id(params.id));
@@ -53,17 +55,12 @@ export default function Page({ params }: { params: pageParam }) {
   }
 
   useEffect(() => {
-    const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
-    setUserID(user?._id || '');
-  }, [setUserID]);
-
-  useEffect(() => {
     setprodData(data?.data);
   }, [data]);
 
   const AddToCart = async () => {
     const data = {
-      user: userID,
+      user: user?._id,
       product: params.id,
       quantity: 1
     };
