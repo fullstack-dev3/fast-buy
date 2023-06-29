@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import useSWR from 'swr';
 import { BiCartAdd } from 'react-icons/bi';
-import { RiBookMarkFill } from 'react-icons/ri';
+import { MdFavoriteBorder } from 'react-icons/md';
 import { FaProductHunt } from 'react-icons/fa';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -14,6 +14,7 @@ import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { get_product_by_id } from '@/Services/Common/product';
 import { add_to_cart } from '@/Services/Common/cart';
+import { add_to_favorite } from '@/Services/Common/favorite';
 import { RootState } from '@/Store/store';
 
 interface pageParam {
@@ -66,6 +67,20 @@ export default function Page({ params }: { params: pageParam }) {
     };
 
     const res = await add_to_cart(data);
+    if (res?.success) {
+      toast.success(res?.message);
+    } else {
+      toast.error(res?.message);
+    }
+  }
+
+  const AddToFavorite = async () => {
+    const finalData = {
+      user: user?._id,
+      product: params.id
+    };
+
+    const res = await add_to_favorite(finalData);
     if (res?.success) {
       toast.success(res?.message);
     } else {
@@ -131,8 +146,9 @@ export default function Page({ params }: { params: pageParam }) {
                     </button>
                     <button
                       className='btn m-2 lg:w-52 h-10 btn-outline btn-success flex items-center justify-center'
+                      onClick={AddToFavorite}
                     >
-                      <RiBookMarkFill className='text-3xl mx-2' /> Bookmark
+                      <MdFavoriteBorder className='text-3xl mx-2' />
                     </button>
                   </div>
                 </div>

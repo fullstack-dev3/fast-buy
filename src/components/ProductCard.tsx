@@ -1,10 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
-import {BsCartPlus , BsFillBookmarkCheckFill} from 'react-icons/bs';
+import { BsCartPlus } from 'react-icons/bs';
+import { MdFavoriteBorder } from 'react-icons/md';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { add_to_cart } from '@/Services/Common/cart';
+import { add_to_favorite } from '@/Services/Common/favorite';
 import { setCartData } from '@/utils/CartDataSlice';
 import { RootState } from '@/Store/store';
 
@@ -55,6 +57,20 @@ export default function ProductCard({ _id, name, description, image, price }: Pr
     }
   }
 
+  const AddToFavorite = async () => {
+    const finalData = {
+      user: user?._id,
+      product: _id,
+    };
+
+    const res = await add_to_favorite(finalData);
+    if (res?.success) {
+      toast.success(res?.message);
+    } else {
+      toast.error(res?.message);
+    }
+  }
+
   return (
     <div
       className="card cursor-pointer card-compact m-3 w-80 bg-white shadow-xl relative text-black"
@@ -73,8 +89,11 @@ export default function ProductCard({ _id, name, description, image, price }: Pr
           <button className="btn btn-circle btn-ghost" onClick={AddToCart}>
             <BsCartPlus className='text-2xl text-orange-600 font-semibold' />
           </button>
-          <button className="btn btn-circle btn-ghost absolute top-0 right-0 ">
-            <BsFillBookmarkCheckFill className='text-2xl text-orange-600 font-semibold' />
+          <button
+            className="btn btn-circle btn-ghost absolute top-0 right-0"
+            onClick={AddToFavorite}
+          >
+            <MdFavoriteBorder className='text-2xl text-orange-600 font-semibold' />
           </button>
         </div>
       </div>
