@@ -19,7 +19,7 @@ type ProductData = {
   name: string,
   description: string,
   image: string,
-  price: Number,
+  price: number,
   featured: Boolean,
   category: {
     name: string,

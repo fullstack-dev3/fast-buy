@@ -1,10 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import {BsCartPlus , BsFillBookmarkCheckFill} from 'react-icons/bs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { add_to_cart } from '@/Services/Common/cart';
+import { setCartData } from '@/utils/CartDataSlice';
 import { RootState } from '@/Store/store';
 
 type UserData = {
@@ -18,13 +19,20 @@ type ProductData = {
   name: string;
   description: string;
   image: string;
-  price: Number;
+  price: number;
 };
+
+type UserCartData = {
+  counts: number,
+  total: number,
+}
 
 export default function ProductCard({ _id, name, description, image, price }: ProductData) {
   const router =  useRouter();
+  const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.User.userData) as UserData | null;
+  const cart = useSelector((state: RootState) => state.Cart.cartData) as UserCartData | null;
 
   const AddToCart = async () => {
     const data = {
@@ -35,6 +43,12 @@ export default function ProductCard({ _id, name, description, image, price }: Pr
 
     const res = await add_to_cart(data);
     if (res?.success) {
+      const cartData = {
+        counts: cart ? cart.counts + 1 : 1,
+        total: cart ? cart.total + price : price
+      }
+
+      dispatch(setCartData(cartData));
       toast.success(res?.message);
     } else {
       toast.error(res?.message);
