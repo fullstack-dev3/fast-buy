@@ -17,7 +17,10 @@ type CategoryData = {
 export default function TopCategories() {
   const { data, isLoading } = useSWR('/gettingAllCategories', get_all_categories);
 
-  const filteredCategories = data?.slice(0, 3);
+  let filteredCategories: CategoryData[] = [];
+  if (data && data.length > 0) {
+    filteredCategories = data.slice(0, 3);
+  }
 
   return (
     <div className='w-full border-2 flex items-center flex-col justify-start bg-gray-50'>

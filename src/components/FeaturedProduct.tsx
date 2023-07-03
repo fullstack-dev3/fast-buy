@@ -18,7 +18,13 @@ type ProductData = {
 export default function FeaturedProduct() {
   const { data, isLoading } = useSWR('/gettingAllProducts', get_all_products);
 
-  const filteredProducts = data?.filter((item: ProductData) => item.featured)?.slice(0, 9);
+  let filteredProducts: ProductData[] = [];
+  if (data && data.length > 0) {
+    let filtered = data.filter((item: ProductData) => item.featured);
+    if (filtered.length > 0) {
+      filteredProducts = filtered.slice(0, 9);
+    }
+  }
 
   return (
     <div className='w-full  border-2 flex items-center flex-col justify-start'>
