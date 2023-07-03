@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { MdFavorite } from 'react-icons/md';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -118,6 +119,12 @@ export default function Navbar() {
           {!isLoading && (
             userisLoggedIn ? (
               <div className='flex'>
+                <div
+                  className="flex items-center justify-center mr-1 cursor-pointer"
+                  onClick={() => router.push("/favorites")}
+                >
+                  <MdFavorite className='text-3xl text-orange-600 font-semibold' />
+                </div>
                 <Cart />
                 <button onClick={handleLogout} className='btn mx-2'>
                   Logout
@@ -157,6 +164,12 @@ export default function Navbar() {
           {!isLoading && (
             userisLoggedIn ? (
               <>
+                <Link
+                  href="/favorites"
+                  className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white"
+                >
+                  Favorite Products
+                </Link>
                 <Link
                   href="/cart"
                   className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white"
