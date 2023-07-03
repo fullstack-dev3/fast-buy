@@ -2,12 +2,13 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 import { BsCartPlus } from 'react-icons/bs';
-import { MdFavoriteBorder } from 'react-icons/md';
+import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { add_to_cart } from '@/Services/Common/cart';
 import { add_to_favorite } from '@/Services/Common/favorite';
 import { setCartData } from '@/utils/CartDataSlice';
+import { setFavoriteData } from '@/utils/FavoriteDataSlice';
 import { RootState } from '@/Store/store';
 
 type UserData = {
@@ -35,6 +36,7 @@ export default function ProductCard({ _id, name, description, image, price }: Pr
 
   const user = useSelector((state: RootState) => state.User.userData) as UserData | null;
   const cart = useSelector((state: RootState) => state.Cart.cartData) as UserCartData | null;
+  const favorites = useSelector((state: RootState) => state.Favorite.favoriteData) as string[];
 
   const AddToCart = async () => {
     const data = {
@@ -65,6 +67,9 @@ export default function ProductCard({ _id, name, description, image, price }: Pr
 
     const res = await add_to_favorite(finalData);
     if (res?.success) {
+      let data = favorites.concat([_id]);
+
+      dispatch(setFavoriteData(data));
       toast.success(res?.message);
     } else {
       toast.error(res?.message);
@@ -85,17 +90,27 @@ export default function ProductCard({ _id, name, description, image, price }: Pr
         <h2 className="card-title">{name}</h2>
         <p>{description}</p>
         <p className='font-semibold'>$ {price.toFixed(2)}</p>
-        <div className="card-actions justify-end">
-          <button className="btn btn-circle btn-ghost" onClick={AddToCart}>
-            <BsCartPlus className='text-2xl text-orange-600 font-semibold' />
-          </button>
-          <button
-            className="btn btn-circle btn-ghost absolute top-0 right-0"
-            onClick={AddToFavorite}
-          >
-            <MdFavoriteBorder className='text-2xl text-orange-600 font-semibold' />
-          </button>
-        </div>
+        {user && (
+          <div className="card-actions justify-end">
+            <button className="btn btn-circle btn-ghost" onClick={AddToCart}>
+              <BsCartPlus className='text-2xl text-orange-600 font-semibold' />
+            </button>
+            {favorites.includes(_id)
+              ? (
+                <div className="absolute top-3 right-3">
+                  <MdFavorite className='text-2xl text-orange-600 font-semibold' />
+                </div>
+              ) : (
+                <button
+                  className="btn btn-circle btn-ghost absolute top-0 right-0"
+                  onClick={AddToFavorite}
+                >
+                  <MdFavoriteBorder className='text-2xl text-orange-600 font-semibold' />
+                </button>
+              )
+            }
+          </div>
+        )}
       </div>
 
       <ToastContainer />

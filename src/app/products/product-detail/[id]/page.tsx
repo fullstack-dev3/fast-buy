@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import useSWR from 'swr';
 import { BiCartAdd } from 'react-icons/bi';
-import { MdFavoriteBorder } from 'react-icons/md';
+import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import { FaProductHunt } from 'react-icons/fa';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -15,6 +15,8 @@ import Navbar from '@/components/Navbar';
 import { get_product_by_id } from '@/Services/Common/product';
 import { add_to_cart } from '@/Services/Common/cart';
 import { add_to_favorite } from '@/Services/Common/favorite';
+import { setCartData } from '@/utils/CartDataSlice';
+import { setFavoriteData } from '@/utils/FavoriteDataSlice';
 import { RootState } from '@/Store/store';
 
 interface pageParam {
@@ -33,8 +35,8 @@ type ProductData = {
   description: string,
   image: string,
   slug: string,
-  price: Number,
-  quantity: Number,
+  price: number,
+  quantity: number,
   featured: Boolean,
   category: {
     name: string,
@@ -44,8 +46,17 @@ type ProductData = {
   updatedAt: string,
 };
 
+type UserCartData = {
+  counts: number,
+  total: number,
+}
+
 export default function Page({ params }: { params: pageParam }) {
+  const dispatch = useDispatch();
+
   const user = useSelector((state: RootState) => state.User.userData) as UserData | null;
+  const cart = useSelector((state: RootState) => state.Cart.cartData) as UserCartData | null;
+  const favorites = useSelector((state: RootState) => state.Favorite.favoriteData) as string[];
 
   const [prodData, setprodData] = useState<ProductData | undefined>(undefined);
 
@@ -68,6 +79,12 @@ export default function Page({ params }: { params: pageParam }) {
 
     const res = await add_to_cart(data);
     if (res?.success) {
+      const cartData = {
+        counts: cart ? cart.counts + 1 : 1,
+        total: cart ? cart.total + (prodData ? prodData.price : 0) : prodData?.price
+      }
+
+      dispatch(setCartData(cartData));
       toast.success(res?.message);
     } else {
       toast.error(res?.message);
@@ -82,6 +99,10 @@ export default function Page({ params }: { params: pageParam }) {
 
     const res = await add_to_favorite(finalData);
     if (res?.success) {
+      let data = favorites;
+      data.push(params.id);
+
+      dispatch(setFavoriteData(data));
       toast.success(res?.message);
     } else {
       toast.error(res?.message);
@@ -118,9 +139,12 @@ export default function Page({ params }: { params: pageParam }) {
             :
               <div className='w-full h-full lg:w-4/5 lg:h-4/5 bg-gray-100 rounded-xl flex flex-col lg:flex-row justify-center shadow-2xl'>
                 <div className='w-full h-60 lg:w-4/12 rounded-xl my-6 mx-4 z-10 relative'>
-                  {prodData?.image &&
-                    <Image src={prodData.image} alt='no image' fill className='rounded-xl' />
-                  }
+                  {prodData?.image && (
+                    <>
+                      <Image src={prodData.image} alt='no image' fill className='rounded-xl' />
+                      <MdFavorite className='text-2xl text-orange-600 font-semibold absolute top-2 right-2' />
+                    </>
+                  )}
                 </div>
                 <div className='w-full h-full lg:w-8/12 rounded flex flex-col px-3 py-2 lg:px-5'>
                   <div className='w-full md:h-20 flex flex-col lg:flex-row md:justify-between py-2 items-center'>
@@ -137,20 +161,24 @@ export default function Page({ params }: { params: pageParam }) {
                   <h1 className='text-3xl font-semibold text-black py-2'>
                     $ {`${prodData?.price.toFixed(2)}`}
                   </h1>
-                  <div className='w-full py-2 lg:flex-row flex-col flex'>
-                    <button
-                      className='btn m-2 lg:w-52 h-10 btn-outline btn-success flex items-center justify-center'
-                      onClick={AddToCart}
-                    >
-                      <BiCartAdd className='text-3xl mx-2' /> Add to Cart
-                    </button>
-                    <button
-                      className='btn m-2 lg:w-52 h-10 btn-outline btn-success flex items-center justify-center'
-                      onClick={AddToFavorite}
-                    >
-                      <MdFavoriteBorder className='text-3xl mx-2' />
-                    </button>
-                  </div>
+                  {user && (
+                    <div className='w-full py-2 lg:flex-row flex-col flex'>
+                      <button
+                        className='btn m-2 lg:w-52 h-10 btn-outline btn-success flex items-center justify-center'
+                        onClick={AddToCart}
+                      >
+                        <BiCartAdd className='text-3xl mx-2' /> Add to Cart
+                      </button>
+                      {prodData && !favorites.includes(prodData?._id) && (
+                        <button
+                          className='btn m-2 lg:w-52 h-10 btn-outline btn-success flex items-center justify-center'
+                          onClick={AddToFavorite}
+                        >
+                          <MdFavoriteBorder className='text-3xl mx-2' /> Add to Favorite
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
           }

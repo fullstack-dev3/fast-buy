@@ -6,7 +6,9 @@ import Cookies from 'js-cookie';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useUsers } from '@/hooks/useUsers';
 import { useCarts } from '@/hooks/useCarts';
+import { useFavorites } from '@/hooks/useFavorites';
 import { RootState } from '@/Store/store';
 
 type userCartData = {
@@ -70,8 +72,10 @@ export default function Navbar() {
     }
     setIsLoading(false);
   }, []);
-  
+
+  useUsers();
   useCarts();
+  useFavorites();
 
   const handleLogout = () => {
     Cookies.remove('token');

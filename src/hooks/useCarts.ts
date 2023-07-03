@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import useSWR from 'swr';
 import { get_all_cart_Items } from '@/Services/Common/cart';
 import { setCartData } from '@/utils/CartDataSlice';
-import { setUserData } from '@/utils/UserDataSlice';
 
 type cartData = {
   product: {
@@ -44,9 +43,8 @@ const useCarts = () => {
       );
 
       dispatch(setCartData({ counts, total }));
-      dispatch(setUserData(user));
     }
-  }, [user, data, dispatch]);
+  }, [data, dispatch]);
 };
 
 export { useCarts };

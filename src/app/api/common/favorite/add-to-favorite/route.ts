@@ -25,11 +25,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, message: error.details[0].message.replace(/['"]+/g, '') });
       }
 
-      const findProd = await Favorite.find({ user, product });
-      if (findProd?.length > 0) {
-        return NextResponse.json({ success: false, message: "Product is already in Favourites" });
-      }
-
       const saveData = await Favorite.create(data);
       if (saveData) {
         return NextResponse.json({ success: true, message: "Product was added to Favourites!" });
