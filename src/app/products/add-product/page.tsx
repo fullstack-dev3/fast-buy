@@ -87,7 +87,13 @@ export default function AddProduct() {
     }
   }, [Router]);
 
-  const { data: categories } = useSWR('/gettingAllCategories', get_all_categories);
+  let { data: categories } = useSWR('/gettingAllCategories', get_all_categories);
+
+  if (categories && categories.length > 0) {
+    categories.sort(function(a: CategoryData, b: CategoryData) {
+      return a.name > b.name ? 1 : -1;
+    });
+  }
 
   const { register, formState: { errors }, handleSubmit } = useForm<Inputs>({
     criteriaMode: "all"
