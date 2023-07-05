@@ -22,6 +22,6 @@ export async function GET(req: Request) {
     }
   } catch (error) {
     console.log('Error in getting category by id:', error);
-    return NextResponse.json({status : 500 , success: false, message: 'Something went wrong. Please try again!' });
+    return NextResponse.json({status : 500 , success: false, message: error });
   }
 }
