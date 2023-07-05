@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import AuthCheck from "@/middleware/AuthCheck";
 import connectDB from "@/DB/connectDB";
 
+export const dynamic  = 'force-dynamic';
+
 export async function GET(req: Request) {
   await connectDB();
   try {

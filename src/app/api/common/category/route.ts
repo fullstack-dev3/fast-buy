@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Category from "@/model/Category";
 import connectDB from "@/DB/connectDB";
 
+export const dynamic  = 'force-dynamic';
+
 export async function GET(req: Request) {
   try {
     await connectDB();

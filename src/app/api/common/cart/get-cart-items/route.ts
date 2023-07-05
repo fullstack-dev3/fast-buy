@@ -3,6 +3,8 @@ import AuthCheck from "@/middleware/AuthCheck";
 import Cart from "@/model/Cart";
 import connectDB from "@/DB/connectDB";
 
+export const dynamic  = 'force-dynamic';
+
 export async function GET(req: Request) {
   await connectDB();
 

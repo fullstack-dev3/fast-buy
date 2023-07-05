@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Category from "@/model/Category";
 import connectDB from "@/DB/connectDB";
 
+export const dynamic  = 'force-dynamic';
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -22,6 +24,6 @@ export async function GET(req: Request) {
     }
   } catch (error) {
     console.log('Error in getting category by id:', error);
-    return NextResponse.json({status : 500 , success: false, message: error });
+    return NextResponse.json({status : 500 , success: false, message: 'Something went wrong. Please try again!' });
   }
 }

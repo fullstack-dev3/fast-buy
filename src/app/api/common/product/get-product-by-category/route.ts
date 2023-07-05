@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import connectDB from "@/DB/connectDB";
 import Product from "@/model/Product";
 
+export const dynamic  = 'force-dynamic';
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
