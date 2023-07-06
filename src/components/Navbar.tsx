@@ -108,7 +108,7 @@ export default function Navbar() {
         </div>
         <div className="w-full hidden sm:block sm:flex-grow sm:flex sm:items-center sm:w-auto">
           <div className="text-sm sm:flex-grow">
-            <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
+            <Link href="/shop" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
               Shop
             </Link>
             <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white">
