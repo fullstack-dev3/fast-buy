@@ -99,8 +99,7 @@ export default function Page({ params }: { params: pageParam }) {
 
     const res = await add_to_favorite(finalData);
     if (res?.success) {
-      let data = favorites;
-      data.push(params.id);
+      let data = favorites.concat([params.id]);
 
       dispatch(setFavoriteData(data));
       toast.success(res?.message);
@@ -142,7 +141,9 @@ export default function Page({ params }: { params: pageParam }) {
                   {prodData?.image && (
                     <>
                       <Image src={prodData.image} alt='no image' fill className='rounded-xl' />
-                      <MdFavorite className='text-2xl text-orange-600 font-semibold absolute top-2 right-2' />
+                      {favorites.includes(prodData?._id) && (
+                        <MdFavorite className='text-2xl text-orange-600 font-semibold absolute top-2 right-2' />
+                      )}
                     </>
                   )}
                 </div>
