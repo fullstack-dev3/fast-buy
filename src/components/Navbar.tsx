@@ -83,6 +83,7 @@ export default function Navbar() {
     localStorage.clear();
     setUserIsLoggedIn(false);
     setMenuOpen(false);
+    router.push('/');
   }
 
   return (
