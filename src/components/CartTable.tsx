@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { AiFillDelete } from 'react-icons/ai';
 import useSWR from 'swr';
 import Cookies from 'js-cookie';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import {
@@ -211,7 +212,9 @@ export default function CartTable() {
               >
                 Total Price <span className='text-xl font-extrabold'>$ {totalPrice}</span>
               </h1>
-              <button className='btn btn-success'>Checkout</button>
+              <Link href='/orders/create-order' className='btn btn-success text-white'>
+                Checkout
+              </Link>
             </div>
           </div>
         ) : (
