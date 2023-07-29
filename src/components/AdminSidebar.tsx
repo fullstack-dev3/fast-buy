@@ -44,13 +44,8 @@ export default function AdminSidebar() {
             </Link>
           </li>
           <li className='py-3 px-1 mb-3'>
-            <Link href={'/'} className='flex items-center justify-center'>
-              <MdOutlinePendingActions className='mx-2' /> Pending Order
-            </Link>
-          </li>
-          <li className='py-3 px-1 mb-3'>
-            <Link href={'/'} className='flex items-center justify-center'>
-              <GrCompliance className='mx-2' /> Completed Order
+            <Link href={'/orders'} className='flex items-center justify-center'>
+              <MdOutlinePendingActions className='mx-2' /> Orders
             </Link>
           </li>
         </ul>
