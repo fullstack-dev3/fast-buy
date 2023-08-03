@@ -87,6 +87,10 @@ export default function Page({ params }: { params: pageParam }) {
     setOrderData(data?.data);
   }, [data]);
 
+  const deliverAction = async (id: string) => {
+    
+  }
+
   return (
     <div className='w-full p-4 min-h-screen bg-gray-50 flex flex-col dark:text-black'>
       <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
@@ -111,13 +115,14 @@ export default function Page({ params }: { params: pageParam }) {
         :
           <div className='w-full h-5/6 dark:text-black overflow-y-auto'>
             <div className='w-full flex px-2 flex-wrap items-center justify-center'>
-              <table className="w-6/12 text-sm text-left text-gray-500 dark:text-gray-400">
+              <table className="w-9/12 text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
+                    <th scope="col" className="px-6 py-3 text-center">Product Name</th>
                     <th scope="col" className="px-6 py-3 text-center">Image</th>
-                    <th scope="col" className="px-6 py-3 text-center">Product</th>
-                    <th scope="col" className="px-6 py-3 text-center">Price</th>
                     <th scope="col" className="px-2 py-3 text-center">Qty</th>
+                    <th scope="col" className="px-6 py-3 text-center">Price</th>
+                    <th scope="col" className="px-6 py-3 text-center">Total</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -127,6 +132,9 @@ export default function Page({ params }: { params: pageParam }) {
                         key={item._id}
                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       >
+                        <td className="px-6 py-4 text-lg text-gray-900 dark:text-white">
+                          {item.product.name}
+                        </td>
                         <td className="w-28 px-6 py-4 align-center">
                           <Image
                             src={item.product.image}
@@ -136,14 +144,14 @@ export default function Page({ params }: { params: pageParam }) {
                             className='rounded'
                           />
                         </td>
-                        <td className="px-6 py-4 text-lg text-gray-900 dark:text-white">
-                          {item.product.name}
+                        <td className="w-28 px-6 py-4 text-lg text-center text-gray-900 dark:text-white">
+                          {item.qty}
                         </td>
                         <td className="w-32 px-6 py-4 text-lg text-center text-gray-900 dark:text-white">
                           ${item.product.price}
                         </td>
                         <td className="w-28 px-6 py-4 text-lg text-center text-gray-900 dark:text-white">
-                          {item.qty}
+                          ${item.product.price * item.qty}
                         </td>
                       </tr>
                     )
@@ -191,6 +199,27 @@ export default function Page({ params }: { params: pageParam }) {
                 </div>
               </div>
             </div>
+            {orderData && (
+              orderData.isDelivered ? (
+                <div className='w-full flex justify-center'>
+                  <span className="inline-flex items-center justify-center bg-green-100 text-green-800 text-md font-large px-4 py-2 rounded-full dark:bg-green-900 dark:text-green-300">
+                    <svg className="w-3 h-3 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                    </svg>
+                    Delivered
+                  </span>
+                </div>
+              ) : (
+                <div className='w-full flex justify-center'>
+                  <button
+                    className='w-20 py-2 text-xs text-green-600 hover:text-white hover:bg-green-600 border border-green-600 rounded transition-all duration-700'
+                    onClick={() => deliverAction(orderData?._id || '')}
+                  >
+                    Deliver
+                  </button>
+                </div>
+              )
+            )}
           </div>
       }
       <ToastContainer />
