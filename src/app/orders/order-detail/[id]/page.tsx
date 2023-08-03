@@ -111,22 +111,45 @@ export default function Page({ params }: { params: pageParam }) {
         :
           <div className='w-full h-5/6 dark:text-black overflow-y-auto'>
             <div className='w-full flex px-2 flex-wrap items-center justify-center'>
-              {
-                orderData?.orderItems.map((item, index) => {
-                  return (
-                    <div key={index} className='md:w-96 m-2 w-52 h-52 bg-gray-300  flex md:flex-row  flex-col items-center justify-start'>
-                      <div className='relative w-1/2 h-full'>
-                        <Image src={item?.product?.image} alt="no Image Found" fill />
-                      </div>
-                      <div className='flex  px-2 py-1 flex-col items-start justify-start'>
-                        <h1 className='my-2'>{item?.product?.name}</h1>
-                        <p className='text-sm my-2 font-semibold'>$ {item?.product?.price}</p>
-                        <p className='text-sm  my-2'>Quantity : <span className='font-semibold'>{item?.qty}</span></p>
-                      </div>
-                    </div>
-                  )
-                })
-              }
+              <table className="w-6/12 text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-center">Image</th>
+                    <th scope="col" className="px-6 py-3 text-center">Product</th>
+                    <th scope="col" className="px-6 py-3 text-center">Price</th>
+                    <th scope="col" className="px-2 py-3 text-center">Qty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orderData?.orderItems.map((item) => {
+                    return (
+                      <tr
+                        key={item._id}
+                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                      >
+                        <td className="w-28 px-6 py-4 align-center">
+                          <Image
+                            src={item.product.image}
+                            alt='no image found'
+                            width={60}
+                            height={90}
+                            className='rounded'
+                          />
+                        </td>
+                        <td className="px-6 py-4 text-lg text-gray-900 dark:text-white">
+                          {item.product.name}
+                        </td>
+                        <td className="w-32 px-6 py-4 text-lg text-center text-gray-900 dark:text-white">
+                          ${item.product.price}
+                        </td>
+                        <td className="w-28 px-6 py-4 text-lg text-center text-gray-900 dark:text-white">
+                          {item.qty}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
             </div>
             <div className='flex flex-wrap w-full items-center justify-center'>
               <div className=' border m-2 w-96  flex-col flex items-start justify-start py-2 px-4'>
