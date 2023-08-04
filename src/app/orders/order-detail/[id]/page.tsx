@@ -8,6 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { get_order_by_id } from '@/Services/Common/order';
+import { update_order_status } from '@/Services/Admin/order';
 import Loading from '@/app/loading';
 
 interface OrderData {
@@ -88,7 +89,13 @@ export default function Page({ params }: { params: pageParam }) {
   }, [data]);
 
   const deliverAction = async (id: string) => {
-    
+    const res =  await update_order_status(id);
+    if(res?.success){
+      setOrderData(res.data);
+      toast.success(res?.message);
+    }else{
+      toast.error(res?.message);
+    }
   }
 
   return (
@@ -204,7 +211,7 @@ export default function Page({ params }: { params: pageParam }) {
                 <div className='w-full flex justify-center'>
                   <span className="inline-flex items-center justify-center bg-green-100 text-green-800 text-md font-large px-4 py-2 rounded-full dark:bg-green-900 dark:text-green-300">
                     <svg className="w-3 h-3 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5.917 5.724 10.5 15 1.5"/>
                     </svg>
                     Delivered
                   </span>

@@ -19,23 +19,6 @@ export const create_a_new_order = async (formData: any) => {
   }
 }
 
-export const get_all_orders = async () => {
-  try {
-    const res = await fetch(`/api/common/order`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${Cookies.get('token')}`
-      }
-    });
-
-    const data = await res.json();
-
-    return data;
-  } catch (error) {
-    console.log('Error in getting all orders Item (service) =>', error);
-  }
-}
-
 export const get_order_by_id= async (id: any) => {
   try {
     const res = await fetch(`/api/common/order/get-order?id=${id}`, {

@@ -5,7 +5,7 @@ import DataTable from 'react-data-table-component';
 import Cookies from 'js-cookie';
 import useSWR from 'swr';
 import { useRouter } from 'next/navigation';
-import { get_all_orders } from '@/Services/Common/order';
+import { get_all_orders } from '@/Services/Admin/order';
 import Loading from '@/app/loading';
 import AdminNavbar from '@/components/AdminNavbar';
 import AdminSidebar from '@/components/AdminSidebar';
