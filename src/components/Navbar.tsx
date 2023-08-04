@@ -112,6 +112,11 @@ export default function Navbar() {
             <Link href="/shop" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
               Shop
             </Link>
+            {!isLoading && userisLoggedIn &&
+              <Link href="/orders/order-history" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
+                Orders
+              </Link>
+            }
             <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white">
               About
             </Link>
@@ -156,9 +161,14 @@ export default function Navbar() {
           className="w-full fixed text-sm bg-purple-500 px-2 py-3 top-0 left-0 z-50 sm:hidden"
           style={{ marginTop: '50px' }}
         >
-          <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
+          <Link href="/shop" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
             Shop
           </Link>
+          {!isLoading && userisLoggedIn &&
+            <Link href="/orders/order-history" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
+              Orders
+            </Link>
+          }
           <Link href="/" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white">
             About
           </Link>
