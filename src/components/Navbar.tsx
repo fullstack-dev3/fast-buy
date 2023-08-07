@@ -6,7 +6,7 @@ import { MdFavorite } from 'react-icons/md';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useUsers } from '@/hooks/useUsers';
 import { useCarts } from '@/hooks/useCarts';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -54,6 +54,7 @@ export const Cart = () => {
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
 
   const [isLoading, setIsLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -109,11 +110,25 @@ export default function Navbar() {
         </div>
         <div className="w-full hidden sm:block sm:flex-grow sm:flex sm:items-center sm:w-auto">
           <div className="text-sm sm:flex-grow">
-            <Link href="/shop" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
+            <Link
+              href="/shop"
+              className={
+                pathname == "/shop"
+                  ? "block mt-4 sm:inline-block sm:mt-0 font-bold text-white mr-4"
+                  : "block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4"
+              }
+            >
               Shop
             </Link>
             {!isLoading && userisLoggedIn &&
-              <Link href="/orders/order-history" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
+              <Link
+                href="/orders/order-history"
+                className={
+                  pathname == "/orders/order-history"
+                    ? "block mt-4 sm:inline-block sm:mt-0 font-bold text-white mr-4"
+                    : "block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4"
+                }
+              >
                 Orders
               </Link>
             }
@@ -161,11 +176,25 @@ export default function Navbar() {
           className="w-full fixed text-sm bg-purple-500 px-2 py-3 top-0 left-0 z-50 sm:hidden"
           style={{ marginTop: '50px' }}
         >
-          <Link href="/shop" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
+          <Link
+            href="/shop"
+            className={
+              pathname == "/shop"
+                ? "block mt-4 sm:inline-block sm:mt-0 font-bold text-white mr-4"
+                : "block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4"
+            }
+          >
             Shop
           </Link>
           {!isLoading && userisLoggedIn &&
-            <Link href="/orders/order-history" className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4">
+            <Link
+              href="/orders/order-history"
+              className={
+                pathname == "/orders/order-history"
+                  ? "block mt-4 sm:inline-block sm:mt-0 font-bold text-white mr-4"
+                  : "block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4"
+              }
+            >
               Orders
             </Link>
           }
@@ -177,13 +206,21 @@ export default function Navbar() {
               <>
                 <Link
                   href="/favorites"
-                  className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white"
+                  className={
+                    pathname == "/favorites"
+                      ? "block mt-4 sm:inline-block sm:mt-0 font-bold text-white mr-4"
+                      : "block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4"
+                  }
                 >
                   Favorite Products
                 </Link>
                 <Link
                   href="/cart"
-                  className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white"
+                  className={
+                    pathname == "/cart"
+                      ? "block mt-4 sm:inline-block sm:mt-0 font-bold text-white mr-4"
+                      : "block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4"
+                  }
                 >
                   View Cart
                 </Link>
@@ -198,13 +235,21 @@ export default function Navbar() {
               <>
                 <Link
                   href="/auth/register"
-                  className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white"
+                  className={
+                    pathname == "/auth/register"
+                      ? "block mt-4 sm:inline-block sm:mt-0 font-bold text-white mr-4"
+                      : "block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4"
+                  }
                 >
                   Register
                 </Link>
                 <Link
                   href="/auth/login"
-                  className="block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white"
+                  className={
+                    pathname == "/auth/login"
+                      ? "block mt-4 sm:inline-block sm:mt-0 font-bold text-white mr-4"
+                      : "block mt-4 sm:inline-block sm:mt-0 text-purple-200 hover:text-white mr-4"
+                  }
                 >
                   Login
                 </Link>
