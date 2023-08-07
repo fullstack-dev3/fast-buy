@@ -70,6 +70,21 @@ export default function Page({ params }: { params: pageParam }) {
     setprodData(data?.data);
   }, [data]);
 
+  let quantity = 'Quantity : ';
+  if (prodData) {
+    if (prodData.quantity < 10) {
+      quantity += prodData.quantity;
+    } else {
+      if (prodData.quantity < 100) {
+        quantity += '10+';
+      } else if (prodData.quantity < 500) {
+        quantity += '100+';
+      } else {
+        quantity += '500+';
+      }
+    }
+  }
+
   const AddToCart = async () => {
     const data = {
       user: user?._id,
@@ -162,6 +177,7 @@ export default function Page({ params }: { params: pageParam }) {
                   <h1 className='text-3xl font-semibold text-black py-2'>
                     $ {`${prodData?.price.toFixed(2)}`}
                   </h1>
+                  <p className='w-full py-2'>{quantity}</p>
                   {user && (
                     <div className='w-full py-2 lg:flex-row flex-col flex'>
                       <button
