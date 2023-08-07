@@ -1,9 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import useSWR from 'swr';
-import Link from 'next/link';
 import Loading from '@/app/loading';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';

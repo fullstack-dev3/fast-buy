@@ -71,8 +71,7 @@ export default function Page({ params }: { params: pageParam }) {
 
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
-
-    if (!Cookies.get('token') || !user) {
+    if (!Cookies.get('token') || user?.role !== 'admin') {
       Router.push('/');
     }
   }, [Router]);
@@ -103,7 +102,7 @@ export default function Page({ params }: { params: pageParam }) {
       <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
         <ul>
           <li>
-            <Link href={'/orders'}>
+            <Link href={'/admin/orders'}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-2 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
               Orders
             </Link>
@@ -139,25 +138,25 @@ export default function Page({ params }: { params: pageParam }) {
                         key={item._id}
                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                       >
-                        <td className="px-6 py-4 text-lg text-gray-900 dark:text-white">
+                        <td className="px-4 py-2 text-lg text-gray-900 dark:text-white">
                           {item.product.name}
                         </td>
-                        <td className="w-28 px-6 py-4 align-center">
+                        <td className="w-28 px-4 py-2">
                           <Image
                             src={item.product.image}
                             alt='no image found'
                             width={60}
                             height={90}
-                            className='rounded'
+                            className='rounded m-auto'
                           />
                         </td>
-                        <td className="w-28 px-6 py-4 text-lg text-center text-gray-900 dark:text-white">
+                        <td className="w-28 px-4 py-2 text-lg text-center text-gray-900 dark:text-white">
                           {item.qty}
                         </td>
-                        <td className="w-32 px-6 py-4 text-lg text-center text-gray-900 dark:text-white">
+                        <td className="w-32 px-4 py-2 text-lg text-center text-gray-900 dark:text-white">
                           ${item.product.price}
                         </td>
-                        <td className="w-28 px-6 py-4 text-lg text-center text-gray-900 dark:text-white">
+                        <td className="w-28 px-4 py-2 text-lg text-center text-gray-900 dark:text-white">
                           ${item.product.price * item.qty}
                         </td>
                       </tr>

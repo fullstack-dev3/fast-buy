@@ -52,7 +52,7 @@ export default function Login() {
       setLoding(false);
 
       if (res?.finalData?.user?.role === 'admin') {
-        Router.push('/dashboard');
+        Router.push('/admin');
       } else {
         Router.push('/');
       }

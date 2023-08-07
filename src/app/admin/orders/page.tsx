@@ -66,8 +66,7 @@ export default function Orders() {
 
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
-
-    if (!Cookies.get('token') || !user) {
+    if (!Cookies.get('token') || user?.role !== 'admin') {
       Router.push('/');
     }
   }, [Router]);
@@ -128,7 +127,7 @@ export default function Orders() {
       name: 'Action',
       cell: (row: OrderData) => (
         <button
-          onClick={() => Router.push(`/orders/order-detail/${row?._id}`)}
+          onClick={() => Router.push(`/admin/orders/order-detail/${row?._id}`)}
           className=' w-20 py-2 mx-2 text-xs text-green-600 hover:text-white my-2 hover:bg-green-600 border border-green-600 rounded transition-all duration-700'
         >
           Details

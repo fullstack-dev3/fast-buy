@@ -3,8 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component';
+import { BsPlusCircleFill } from 'react-icons/bs';
 import useSWR, { mutate } from 'swr';
 import { ref, deleteObject  } from 'firebase/storage';
+import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { storage } from '@/utils/Firebase';
@@ -13,6 +15,13 @@ import { delete_a_product } from '@/Services/Admin/product';
 import Loading from '@/app/loading';
 import AdminNavbar from '@/components/AdminNavbar';
 import AdminSidebar from '@/components/AdminSidebar';
+
+interface userData {
+  _id: string,
+  name: string,
+  email: string, 
+  role: string, 
+}
 
 type ProductData = {
   _id: string,
@@ -34,6 +43,13 @@ type ProductData = {
 
 export default function Products() {
   const router =  useRouter();
+
+  useEffect(() => {
+    const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!Cookies.get('token') || user?.role !== 'admin') {
+      router.push('/');
+    }
+  }, [router]);
 
   const [prodData, setProdData] = useState<ProductData[] | null>(null);
   const [search, setSearch] = useState('');
@@ -86,7 +102,7 @@ export default function Products() {
       cell: (row: ProductData) => (
         <div className='flex items-center justify-start px-2 h-20'>
           <button
-            onClick={() => router.push(`/products/update-product/${row?._id}`)}
+            onClick={() => router.push(`/admin/products/update-product/${row?._id}`)}
             className=' w-20 py-2 mx-2 text-xs text-green-600 hover:text-white my-2 hover:bg-green-600 border border-green-600 rounded transition-all duration-700'
           >
             Update
@@ -143,29 +159,38 @@ export default function Products() {
         <div className='w-full px-4 py-2'>
           {prodData
             ?
-            <DataTable
-              columns={columns}
-              data={prodData}
-              pagination
-              title={`Total Products : ${prodData?.length}`}
-              fixedHeader
-              fixedHeaderScrollHeight='100%'
-              selectableRows
-              selectableRowsHighlight
-              persistTableHead
-              progressPending={isLoading}
-              subHeader
-              subHeaderComponent={
-                <input
-                  className='w-60 dark:bg-transparent py-2 px-2  outline-none  border-b-2 border-orange-600'
-                  type="search"
-                  value={search}
-                  onChange={(e) => handleSearch(e.target.value)}
-                  placeholder="Search..."
-                />
-              }
-              className="bg-white"
-            />
+            <>
+              <button
+                className="flex items-center text-white my-2 bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                onClick={() => router.push(`/admin/products/add-product`)}
+              >
+                <BsPlusCircleFill className='mr-2' />
+                Add New
+              </button>
+              <DataTable
+                columns={columns}
+                data={prodData}
+                pagination
+                title={`Total Products : ${prodData?.length}`}
+                fixedHeader
+                fixedHeaderScrollHeight='100%'
+                selectableRows
+                selectableRowsHighlight
+                persistTableHead
+                progressPending={isLoading}
+                subHeader
+                subHeaderComponent={
+                  <input
+                    className='w-60 dark:bg-transparent py-2 px-2  outline-none  border-b-2 border-orange-600'
+                    type="search"
+                    value={search}
+                    onChange={(e) => handleSearch(e.target.value)}
+                    placeholder="Search..."
+                  />
+                }
+                className="bg-white"
+              />
+            </>
             : <Loading />
           }
         </div>

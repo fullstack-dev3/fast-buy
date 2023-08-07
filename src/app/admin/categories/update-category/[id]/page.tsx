@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import { TailSpin } from 'react-loader-spinner';
+import Cookies from 'js-cookie';
 import useSWR from 'swr';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -28,12 +29,26 @@ type CategoryData = {
   updatedAt: string;
 };
 
+interface userData {
+  _id: String,
+  name: String,
+  email: String,
+  role: String,
+}
+
 interface pageParam {
   id: string
 }
 
 export default function Page({ params}: { params: pageParam }) {
   const Router = useRouter();
+
+  useEffect(() => {
+    const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!Cookies.get('token') || user?.role !== 'admin') {
+      Router.push('/');
+    }
+  }, [Router]);
 
   const [loader, setLoader] = useState(false)
   const [catData, setCatData] = useState<CategoryData | undefined>(undefined);
@@ -77,7 +92,7 @@ export default function Page({ params}: { params: pageParam }) {
         toast.success(res?.message);
 
         setTimeout(() => {
-          Router.push("/categories");
+          Router.push("/admin/categories");
         }, 2000);
 
         setLoader(false);
@@ -92,7 +107,7 @@ export default function Page({ params}: { params: pageParam }) {
       <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
         <ul>
           <li>
-            <Link href={'/categories'}>
+            <Link href={'/admin/categories'}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-2 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
               Categories
             </Link>

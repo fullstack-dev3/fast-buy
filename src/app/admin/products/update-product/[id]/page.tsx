@@ -4,14 +4,21 @@ import React, { useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { TailSpin } from 'react-loader-spinner';
 import { ToastContainer, toast } from 'react-toastify';
-import useSWR from 'swr';
 import Cookies from 'js-cookie';
+import useSWR from 'swr';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { storage } from '@/utils/Firebase';
 import { get_all_categories } from '@/Services/Common/category';
-import { add_new_product } from '@/Services/Admin/product';
+import { get_product_by_id } from '@/Services/Common/product';
+import { update_a_product } from '@/Services/Admin/product';
+
+interface userData {
+  _id: string,
+  name: string,
+  email: string, 
+  role: string, 
+}
 
 type CategoryData = {
   _id: string;
@@ -24,61 +31,38 @@ type CategoryData = {
   updatedAt: string;
 };
 
+type ProductData = {
+  _id: string,
+  name: string,
+  description: string,
+  image: string,
+  fileName: string,
+  slug: string,
+  price: Number,
+  quantity: Number,
+  featured: Boolean,
+  category: CategoryData,
+  createdAt: string;
+  updatedAt: string;
+};
+
 type Inputs = {
+  _id: string,
   name: string,
   description: string,
   slug: string,
   featured: Boolean,
   price: Number,
   quantity:  Number,
-  categoryID: string,
-  image: Array<File>,
-  fileName: string,
+  category: string,
 }
 
-interface userData {
-  _id: String,
-  name: String,
-  email: String,
-  role: String,
+interface pageParam {
+  id: string
 }
 
-let fileName = '';
-
-const uploadImages = async (slug: string, file: File) => {
-  const orgName = file?.name.split('.');
-  const ext = orgName[orgName.length - 1];
-
-  fileName = slug + '-' + Math.random().toString(36).substring(2, 8) + '.' + ext;
-
-  const storageRef = ref(storage, `ecommerce/product/${fileName}`);
-  const uploadTask = uploadBytesResumable(storageRef, file);
-
-  return new Promise((resolve, reject) => {
-    uploadTask.on('state_changed', (snapshot) => {
-    }, (error) => {
-      console.log(error);
-      reject(error);
-    }, () => {
-      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        resolve(downloadURL);
-      }).catch((error) => {
-        console.log(error);
-        reject(error);
-      });
-    });
-  });
-}
-
-const maxSize = (value: File) => {
-  const fileSize = value.size / 1024 / 1024;
-  return fileSize < 1 ? false : true;
-}
-
-export default function AddProduct() {
+export default function Page({ params, searchParams }: { params: pageParam, searchParams: any }) {
   const Router = useRouter();
-
-  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
@@ -87,44 +71,55 @@ export default function AddProduct() {
     }
   }, [Router]);
 
-  let { data: categories } = useSWR('/gettingAllCategories', get_all_categories);
+  const [loader, setLoader] = useState(false);
+  const [prodData, setProdData] = useState<ProductData | undefined>(undefined);
 
-  if (categories && categories.length > 0) {
-    categories.sort(function(a: CategoryData, b: CategoryData) {
-      return a.name > b.name ? 1 : -1;
-    });
-  }
+  const { data: categories } = useSWR('/gettingAllCategories', get_all_categories);
+  const { data, isLoading } = useSWR('/gettingProductByID', () => get_product_by_id(params.id));
 
-  const { register, formState: { errors }, handleSubmit } = useForm<Inputs>({
+  const { register, setValue, formState: { errors }, handleSubmit } = useForm<Inputs>({
     criteriaMode: "all"
   });
 
+  if (data?.success !== true) {
+    toast.error(data?.message);
+  }
+
+  useEffect(() => {
+    setProdData(data?.data)
+  }, [data]);
+
+  useEffect(() => {
+    if (prodData) {
+      setValue('name', prodData?.name)
+      setValue('description', prodData?.description)
+      setValue('slug', prodData?.slug)
+      setValue('featured', prodData?.featured)
+      setValue('category', prodData?.category._id)
+      setValue('quantity', prodData?.quantity)
+      setValue('price', prodData?.price)
+    }
+  }, [prodData, setValue]);
+
   const onSubmit: SubmitHandler<Inputs> = async data => {
-    setLoader(true);
+    setLoader(false);
 
-    const CheckFileSize = maxSize(data.image[0]);
-    if (CheckFileSize) {
-      return toast.error('Image size must be less than 1MB');
-    }
+    const updatedData: Inputs = {
+      _id: params.id,
+      name: data.name !== prodData?.name ? data.name : prodData?.name,
+      description: data.description !== prodData?.description ? data.description : prodData?.description,
+      slug: data.slug !== prodData?.slug ? data.slug : prodData?.slug,
+      featured: data.featured !== prodData?.featured ? data.featured : prodData?.featured,
+      quantity: data.quantity !== prodData?.quantity ? data.quantity : prodData?.quantity,
+      price: data.price !== prodData?.price ? data.price : prodData?.price,
+      category: data.category !== prodData?.category._id ? data.category : prodData?.category._id,
+    };
 
-    const uploadImageToFirebase = await uploadImages(data.slug, data.image[0]);
-    const finalData = {
-      name: data.name,
-      description: data.description,
-      image: uploadImageToFirebase,
-      fileName: fileName,
-      slug: data.slug,
-      featured: data.featured,
-      price: data.price,
-      quantity: data.quantity,
-      category : data.categoryID
-    }
-
-    const res = await add_new_product(finalData);
-    if (res.success) {
+    const res = await update_a_product(updatedData)
+    if (res?.success) {
       toast.success(res?.message);
       setTimeout(() => {
-        Router.push('/products');
+        Router.push("/admin/products");
       }, 2000);
       setLoader(false);
     } else {
@@ -134,27 +129,27 @@ export default function AddProduct() {
   }
 
   return (
-    <div className='w-full p-4 min-h-screen bg-gray-50 flex flex-col'>
-      <div className="text-sm breadcrumbs border-b-2 border-b-orange-600">
-        <ul className='dark:text-black'>
+    <div className='w-full p-4 min-h-screen bg-gray-50 flex flex-col dark:text-black'>
+      <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
+        <ul>
           <li>
-            <Link href={'/products'}>
+            <Link href={'/admin/products'}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-2 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
               Products
             </Link>
           </li>
           <li>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-2 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            Add Product
+            Update Product
           </li>
         </ul>
       </div>
       <div className='w-full h-20 my-2 text-center'>
-        <h1 className='text-2xl py-2 dark:text-black'>Add Product</h1>
+        <h1 className='text-2xl py-2 '>Update Product</h1>
       </div>
       {
-        loader ? (
-          <div className='w-full flex-col h-96 flex items-center justify-center'>
+        isLoading || loader ? (
+          <div className='w-full  flex-col h-96 flex items-center justify-center '>
             <TailSpin
               ariaLabel="tail-spin-loading"
               color="orange"
@@ -164,15 +159,18 @@ export default function AddProduct() {
               width="50"
             />
             <p className='text-sm mt-2 font-semibold text-orange-500'>
-              Adding Product Hold Tight ....
+              Updating product Hold Tight ....
             </p>
           </div>
         ) : (
           <div className='w-full h-full flex items-start justify-center'>
-            <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg py-2 flex-col">
-              <div className="form-control w-full mb-2">
+            <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-lg  py-2 flex-col ">
+              <div className="form-control w-full max-w-full">
+                <label className="label">
+                  <span className="label-text">Choose Category</span>
+                </label>
                 <select
-                  {...register("categoryID", { required: true })}
+                  {...register("category", { required: true })}
                   className="select select-bordered w-full mb-2"
                 >
                   <option value="">Choose Product Category</option>
@@ -184,7 +182,7 @@ export default function AddProduct() {
                     })
                   }
                 </select>
-                {errors.categoryID &&
+                {errors.category &&
                   <span className='text-red-500 text-xs mt-2'>This field is required</span>
                 }
               </div>
@@ -222,10 +220,11 @@ export default function AddProduct() {
                 </label>
                 <input
                   {...register("price", { required: true })}
-                  type="text" placeholder="Type here"
+                  type="number"
+                  placeholder="Type here"
                   className="input input-bordered w-full"
                 />
-                {errors.price &&
+                {errors.slug &&
                   <span className='text-red-500 text-xs mt-2'>This field is required</span>
                 }
               </div>
@@ -235,11 +234,11 @@ export default function AddProduct() {
                 </label>
                 <input
                   {...register("quantity", { required: true })}
-                  type="text"
+                  type="number"
                   placeholder="Type here"
                   className="input input-bordered w-full"
                 />
-                {errors.quantity &&
+                {errors.slug &&
                   <span className='text-red-500 text-xs mt-2'>This field is required</span>
                 }
               </div>
@@ -256,8 +255,8 @@ export default function AddProduct() {
                   <span className='text-red-500 text-xs mt-2'>This field is required</span>
                 }
               </div>
-              <div className="form-control my-2">
-                <label className="cursor-pointer label">
+              <div className="form-control py-2">
+                <label className="label cursor-pointer">
                   <span className="label-text">Featured Product</span>
                   <input
                     {...register("featured")}
@@ -266,29 +265,22 @@ export default function AddProduct() {
                   />
                 </label>
               </div>
-              <div className="form-control w-full ">
-                <label className="label">
-                  <span className="label-text">Add product Image</span>
-                </label>
-                <input
-                  {...register("image", { required: true })}
-                  accept="image/*"
-                  max="1000000"
-                  type="file"
-                  className="file-input file-input-bordered w-full"
-                />
-                {errors.image &&
-                  <span className='text-red-500 text-xs mt-2'>
-                    This field is required and the image must be less than or equal to 1MB.
-                  </span>
-                }
-              </div>
+              {
+                prodData && (
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text">Product Image</span>
+                    </label>
+                    <Image src={prodData?.image || ""} alt='No Image Found' width={200} height={200} />
+                  </div>
+                )
+              }
               <button className='btn btn-block mt-3'>Done !</button>
-            </form>
-          </div>
+            </form >
+          </div >
         )
       }
       <ToastContainer />
-    </div>
+    </div >
   )
 }

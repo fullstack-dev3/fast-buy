@@ -1,13 +1,18 @@
 "use client"
 
 import React from 'react';
+import { AiFillHome } from 'react-icons/ai';
+import { BiCategory } from 'react-icons/bi';
+import { GiLoincloth } from 'react-icons/gi';
+import { MdOutlinePendingActions } from 'react-icons/md';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function AdminNavbar() {
   const router =  useRouter();
+  const pathname = usePathname();
 
   const handleLogout = () => {
     Cookies.remove('token');
@@ -25,14 +30,52 @@ export default function AdminNavbar() {
           </label>
           <ul
             tabIndex={0}
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow text-black bg-gray-50 rounded-box w-52"
+            className="menu menu-compact dropdown-content mt-1 text-black bg-gray-50 w-40"
           >
-            <li><Link href={'/dashboard'}>Homepage</Link></li>
-            <li><Link href={'/categories'}>Categories</Link></li>
-            <li><Link href={'/categories/add-category'}>Add Category</Link></li>
-            <li><Link href={'/products'}>Products</Link></li>
-            <li><Link href={'/products/add-product'}>Add Product</Link></li>
-            <li><Link href={'/orders'}>Orders</Link></li>
+            <li
+              className={
+                pathname == '/admin'
+                  ? 'mb-1 py-1 w-full bg-purple-200 text-blue-600'
+                  : 'mb-1 py-1 w-full hover:bg-purple-200 hover:text-blue-600'
+              }
+            >
+              <Link href={'/admin'} className='flex items-center'>
+                <AiFillHome /> Home
+              </Link>
+            </li>
+            <li
+              className={
+                pathname == '/admin/categories'
+                  ? 'mb-1 py-1 w-full bg-purple-200 text-blue-600'
+                  : 'mb-1 py-1 w-full hover:bg-purple-200 hover:text-blue-600'
+              }
+            >
+              <Link href={'/admin/categories'} className='flex items-center'>
+                <BiCategory /> Categories
+              </Link>
+            </li>
+            <li
+              className={
+                pathname == '/admin/products'
+                  ? 'mb-1 py-1 w-full bg-purple-200 text-blue-600'
+                  : 'mb-1 py-1 w-full hover:bg-purple-200 hover:text-blue-600'
+              }
+            >
+              <Link href={'/admin/products'} className='flex items-center'>
+                <GiLoincloth /> Products
+              </Link>
+            </li>
+            <li
+              className={
+                pathname == '/admin/orders'
+                  ? 'mb-1 py-1 w-full bg-purple-200 text-blue-600'
+                  : 'mb-1 py-1 w-full hover:bg-purple-200 hover:text-blue-600'
+              }
+            >
+              <Link href={'/admin/orders'} className='flex items-center'>
+                <MdOutlinePendingActions /> Orders
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
