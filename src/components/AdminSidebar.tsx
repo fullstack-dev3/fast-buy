@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { RxDashboard } from 'react-icons/rx';
 import { AiFillHome } from 'react-icons/ai';
 import { BiCategory } from 'react-icons/bi';
@@ -6,9 +7,16 @@ import { GiLoincloth } from 'react-icons/gi';
 import { MdOutlinePendingActions } from 'react-icons/md';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { RootState } from '@/Store/store';
+
+type adminData = {
+  pendingOrders: number,
+}
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+
+  const data = useSelector((state: RootState) => state.AdminData.adminData) as adminData | null;
 
   return (
     <div className='w-60 hidden md:block bg-white h-screen dark:text-black'>
@@ -61,6 +69,11 @@ export default function AdminSidebar() {
           >
             <Link href={'/admin/orders'} className='flex items-center'>
               <MdOutlinePendingActions className='mx-2' /> Orders
+              {data && data.pendingOrders > 0 &&
+                <span className="inline-flex items-center justify-center w-6 h-6 ml-6 text-sm font-semibold text-blue-800 bg-blue-200 rounded-full">
+                  {data.pendingOrders}
+                </span>
+              }
             </Link>
           </li>
         </ul>

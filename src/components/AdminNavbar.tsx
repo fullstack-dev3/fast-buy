@@ -1,6 +1,7 @@
 "use client"
 
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { AiFillHome } from 'react-icons/ai';
 import { BiCategory } from 'react-icons/bi';
 import { GiLoincloth } from 'react-icons/gi';
@@ -9,10 +10,17 @@ import Cookies from 'js-cookie';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { RootState } from '@/Store/store';
+
+type adminData = {
+  pendingOrders: number,
+}
 
 export default function AdminNavbar() {
   const router =  useRouter();
   const pathname = usePathname();
+
+  const data = useSelector((state: RootState) => state.AdminData.adminData) as adminData | null;
 
   const handleLogout = () => {
     Cookies.remove('token');
@@ -74,6 +82,11 @@ export default function AdminNavbar() {
             >
               <Link href={'/admin/orders'} className='flex items-center'>
                 <MdOutlinePendingActions /> Orders
+                {data && data.pendingOrders > 0 &&
+                  <span className="inline-flex items-center justify-center w-6 h-6 ml-4 text-sm font-semibold text-blue-800 bg-blue-200 rounded-full">
+                    {data.pendingOrders}
+                  </span>
+                }
               </Link>
             </li>
           </ul>
