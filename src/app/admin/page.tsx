@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { useAdmin } from '@/hooks/useAdmin';
 import AdminNavbar from '@/components/AdminNavbar';
 import AdminSidebar from '@/components/AdminSidebar';
 import StatsTiles from '@/components/StatsTiles';
@@ -19,14 +20,16 @@ interface userData {
 export default function Dashboard() {
   const Router = useRouter();
 
-  const data = GetTilesData();
-
   useEffect(() => {
     const user: userData | null = JSON.parse(localStorage.getItem('user') || '{}');
     if (!Cookies.get('token') || user?.role !== 'admin') {
       Router.push('/');
     }
   }, [Router]);
+
+  useAdmin();
+
+  const data = GetTilesData();
 
   return (
     <div className='w-full min-h-screen flex bg-gray-50'>
