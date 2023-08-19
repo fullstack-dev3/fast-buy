@@ -36,6 +36,7 @@ type ProductData = {
 };
 
 export default function Shop() {
+  const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [products, setProducts] = useState<ProductData[] | null>(null);
 
@@ -65,6 +66,22 @@ export default function Shop() {
     }
   }
 
+  const handleSearch = async (search: string) => {
+    setSearch(search);
+
+    if (search == '') {
+      setProducts(data);
+    } else {
+      const filteredData = data.filter((item: ProductData) => {
+        const itemName = item?.name.toLowerCase();
+        const text = search.toLowerCase();
+        return itemName.indexOf(text) > -1;
+      });
+
+      setProducts(filteredData);
+    }
+  }
+
   return (
     <>
       <Navbar />
@@ -72,8 +89,27 @@ export default function Shop() {
         className='w-full mt-[64px] px-5 py-5 bg-white dark:text-black'
         style={{ minHeight: 'calc(100vh - 204px)' }}
       >
-        <div className='w-full p-2 flex flex-wrap'>
-          {categories && (
+        {products && (
+          <div className='w-full p-2'>
+            <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                  <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+              </div>
+              <input
+                type="search"
+                className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                placeholder="Search Products"
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
+        {categories && (
+          <div className='w-full p-2 flex flex-wrap'>
             <div
               className={
                 category == ''
@@ -85,28 +121,28 @@ export default function Shop() {
               <FcShop className='text-5xl' />
               <h3 className='font-medium pt-3 px-6'>All</h3>
             </div>
-          )}
-          {categories?.map((item: CategoryData) => {
-            return (
-              <div
-                key={item._id}
-                className={
-                  category == item._id
-                  ? "flex text-black cursor-pointer mx-2 mb-2 bg-gray-200 shadow-md"
-                  : "flex text-black cursor-pointer mx-2 mb-2 shadow-md"
-                }
-                onClick={() => filterByCategory(item._id)}
-              >
-                <div className="w-12">
-                  <div className='w-full rounded relative h-12'>
-                    <Image src={item.image} alt='no Image' className='rounded' fill />
+            {categories.map((item: CategoryData) => {
+              return (
+                <div
+                  key={item._id}
+                  className={
+                    category == item._id
+                    ? "flex text-black cursor-pointer mx-2 mb-2 bg-gray-200 shadow-md"
+                    : "flex text-black cursor-pointer mx-2 mb-2 shadow-md"
+                  }
+                  onClick={() => filterByCategory(item._id)}
+                >
+                  <div className="w-12">
+                    <div className='w-full rounded relative h-12'>
+                      <Image src={item.image} alt='no Image' className='rounded' fill />
+                    </div>
                   </div>
+                  <h3 className='font-medium pt-3 px-2'>{item.name}</h3>
                 </div>
-                <h3 className='font-medium pt-3 px-2'>{item.name}</h3>
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
+        )}
         <div className='w-full flex flex-col'>
           {
             isLoading
