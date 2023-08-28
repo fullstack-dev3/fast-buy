@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { register_me } from '@/Services/auth';
 
-export default function  Register (){
+export default function Register() {
   const router = useRouter();
 
   useEffect(() => {
@@ -21,37 +21,45 @@ export default function  Register (){
 
   const [formData, setFormData] = useState({ email: "", password: "" , name : "" });
   const [error, setError] = useState({ email: "", password: "", name: '' });
-  const [loading , setLoding] = useState(false);
+  const [loading , setLoading] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setLoding(true);
+    setLoading(true);
 
+    let nameError = '';
+    let emailError = '';
+    let passError = '';
+    if (!formData.name) {
+      nameError = "Name field is required";
+    }
     if (!formData.email) {
-      setError({ ...error, email: "Email Field is Required" })
-      return;
+      emailError = "Email field is required";
     }
-
     if (!formData.password) {
-      setError({ ...error, password: "Password Field is required" })
-      return;
+      passError = "Password field is required";
     }
+    if (emailError != '' || passError != '') {
+      setLoading(false);
+      setError({
+        name: nameError,
+        email: emailError,
+        password: passError
+      });
 
-    if (!formData.name ) {
-      setError({ ...error, name: "Name Field is required" })
       return;
     }
 
     const data = await register_me(formData);
     if (data.success) {
-      setLoding(false);
+      setLoading(false);
 
       toast.success(data.message);
 
       router.push('/auth/login');
     } else {
-      setLoding(false);
+      setLoading(false);
       toast.error(data.message);
     }
   }
@@ -78,7 +86,11 @@ export default function  Register (){
                     name="name"
                     placeholder="Name"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-orange-600 focus:border-orange-600 block w-full p-2.5"
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, name: e.target.value });
+                      const name = e.target.value == '' ? "Name field is required" : '';
+                      setError({ name, email: error.email, password: error.password });
+                    }}
                   />
                   {error.name && <p className="text-sm text-red-500">{error.name}</p>}
                 </div>
@@ -92,7 +104,11 @@ export default function  Register (){
                     name="email"
                     placeholder="name@company.com"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-orange-600 focus:border-orange-600 block w-full p-2.5"
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      const email = e.target.value == '' ? "Email field is required" : '';
+                      setError({ name: error.name, email, password: error.password });
+                    }}
                   />
                   {error.email && <p className="text-sm text-red-500">{error.email}</p>}
                 </div>
@@ -106,7 +122,11 @@ export default function  Register (){
                     name="password"
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-orange-600 focus:border-orange-600 block w-full p-2.5"
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, password: e.target.value });
+                      const password = e.target.value == '' ? "Password field is required" : '';
+                      setError({ name: error.name, email: error.email, password })
+                    }}
                   />
                   {error.password && <p className="text-sm text-red-500">{error.password}</p>}
                 </div>
