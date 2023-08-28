@@ -7,7 +7,7 @@ const AuthCheck = async (req: Request) => {
     return NextResponse.json({ message: "You are not authorized" });
   }
   try {
-    const decoded = await jwt.verify(token, process.env.JWT_SECREAT ?? 'default_secret_dumbScret') as JwtPayload;
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET ?? 'default_secret_dumbScret') as JwtPayload;
     if(decoded) return decoded?.role
   } catch (error) {
     return false

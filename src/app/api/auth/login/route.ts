@@ -30,7 +30,15 @@ export  async function POST (req: Request){
     const isMatch = await compare(password, checkUser.password);
     if (!isMatch) return NextResponse.json({ success: false, message: "Incorrect Password" });
 
-    const token = jwt.sign({ id: checkUser._id, email: checkUser.email , role : checkUser?.role }, process.env.JWT_SECREAT ?? 'default_secret_dumbScret', { expiresIn: '1d' });
+    const token = jwt.sign(
+      {
+        id: checkUser._id,
+        email: checkUser.email,
+        role: checkUser?.role
+      },
+      process.env.JWT_SECRET ?? 'default_secret_dumbScret',
+      { expiresIn: '1d' }
+    );
     const finalData = {token , user : {email : checkUser.email , name : checkUser.name , _id : checkUser._id , role : checkUser?.role}}
 
     return NextResponse.json({ success: true, message: "Login Successfull",  finalData});
