@@ -18,7 +18,7 @@ export default function Login() {
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState({ email: "", password: "" });
-  const [loading, setLoding] = useState<Boolean>(false);
+  const [loading, setLoading] = useState<Boolean>(false);
 
   useEffect(() => {
     if (localStorage.getItem('user') && Cookies.get('token')) {
@@ -29,15 +29,23 @@ export default function Login() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setLoding(true);
+    setLoading(true);
 
+    let emailError = '';
+    let passError = '';
     if (!formData.email) {
-      setError({ ...error, email: "Email Field is Required" })
-      return;
+      emailError = "Email field is required";
     }
-
     if (!formData.password) {
-      setError({ ...error, password: "Password Field is required" })
+      passError = "Password field is required";
+    }
+    if (emailError != '' || passError != '') {
+      setLoading(false);
+      setError({
+        email: emailError,
+        password: passError
+      });
+
       return;
     }
 
@@ -49,7 +57,7 @@ export default function Login() {
 
       dispatch(setUserData(res?.finalData?.user));
 
-      setLoding(false);
+      setLoading(false);
 
       if (res?.finalData?.user?.role === 'admin') {
         Router.push('/admin');
@@ -57,7 +65,7 @@ export default function Login() {
         Router.push('/');
       }
     } else {
-      setLoding(false);
+      setLoading(false);
       toast.error(res.message);
     }
   }
@@ -83,7 +91,11 @@ export default function Login() {
                     name="email"
                     placeholder="name@company.com"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-orange-600 focus:border-orange-600 block w-full p-2.5 "
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      const email = e.target.value == '' ? "Email field is required" : '';
+                      setError({ email, password: error.password });
+                    }}
                   />
                   {error.email && <p className="text-sm text-red-500">{error.email}</p>}
                 </div>
@@ -97,7 +109,11 @@ export default function Login() {
                     name="password"
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-orange-600 focus:border-orange-600 block w-full p-2.5"
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, password: e.target.value });
+                      const password = e.target.value == '' ? "Password field is required" : '';
+                      setError({ email: error.email, password })
+                    }}
                   />
                   {error.password && <p className="text-sm text-red-500">{error.password}</p>}
                 </div>
