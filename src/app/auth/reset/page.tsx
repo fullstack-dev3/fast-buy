@@ -14,7 +14,7 @@ export default function ForgetPassword() {
 
   const [formData, setFormData] = useState({ email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState({ email: "", password: "", confirmPassword: "" });
-  const [loading, setLoding] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem('user') && Cookies.get('token')) {
@@ -25,20 +25,28 @@ export default function ForgetPassword() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    setLoding(true);
+    setLoading(true);
 
+    let emailError = '';
+    let passError = '';
+    let confirmError = '';
     if (!formData.email) {
-      setError({ ...error, email: "Email Field is Required" })
-      return;
+      emailError = "Email field is required";
     }
-
     if (!formData.password) {
-      setError({ ...error, password: "Password Field is required" })
-      return;
+      passError = "Password field is required";
     }
-
     if (!formData.confirmPassword) {
-      setError({ ...error, confirmPassword: "Confirm Password Field is required" })
+      confirmError = "Confirm Password field is required";
+    }
+    if (emailError != '' || passError != '') {
+      setLoading(false);
+      setError({
+        email: emailError,
+        password: passError,
+        confirmPassword: confirmError
+      });
+
       return;
     }
 
@@ -48,13 +56,13 @@ export default function ForgetPassword() {
 
     const res = await forget_password(formData);
     if (res.success) {
-      setLoding(false);
+      setLoading(false);
 
       toast.success(res.message);
 
       Router.push('/auth/login');
     } else {
-      setLoding(false);
+      setLoading(false);
       toast.error(res.message);
     }
   }
@@ -80,7 +88,11 @@ export default function ForgetPassword() {
                   name="email"
                   placeholder="name@company.com"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-orange-600 focus:border-orange-600 block w-full p-2.5 "
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value });
+                    const email = e.target.value == '' ? "Email field is required" : '';
+                    setError({ email, password: error.password, confirmPassword: error.confirmPassword });
+                  }}
                 />
                 {error.email && <p className="text-sm text-red-500">{error.email}</p>}
               </div>
@@ -94,7 +106,11 @@ export default function ForgetPassword() {
                   name="password"
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-orange-600 focus:border-orange-600 block w-full p-2.5 "
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, password: e.target.value });
+                    const password = e.target.value == '' ? "Password field is required" : '';
+                    setError({ email: error.email, password, confirmPassword: error.confirmPassword })
+                  }}
                 />
                 {error.password && <p className="text-sm text-red-500">{error.password}</p>}
               </div>
@@ -108,7 +124,11 @@ export default function ForgetPassword() {
                   name="confirm-password"
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-orange-600 focus:border-orange-600 block w-full p-2.5 "
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, confirmPassword: e.target.value });
+                    const confirmPassword = e.target.value == '' ? "Confirm Password field is required" : '';
+                    setError({ email: error.email, password: error.password, confirmPassword })
+                  }}
                 />
                 {error.confirmPassword && <p className="text-sm text-red-500">{error.confirmPassword}</p>}
               </div>
