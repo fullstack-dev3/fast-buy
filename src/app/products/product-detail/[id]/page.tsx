@@ -62,12 +62,10 @@ export default function Page({ params }: { params: pageParam }) {
 
   const { data, isLoading } = useSWR('/gettingProductbyID', () => get_product_by_id(params.id));
 
-  if (data?.success !== true) {
-    toast.error(data?.message);
-  }
-
   useEffect(() => {
-    setprodData(data?.data);
+    if (data && data.success) {
+      setprodData(data.data);
+    }
   }, [data]);
 
   let quantity = 'Quantity : ';
@@ -131,18 +129,20 @@ export default function Page({ params }: { params: pageParam }) {
         style={{ minHeight: 'calc(100vh - 204px)' }}
       >
         <div className="text-sm breadcrumbs  border-b-2 py-2 px-2 border-b-orange-600">
-          <ul>
-            <li>
-              <Link href={`/categories/category-product/${prodData?.category?._id}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-2 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-                {prodData?.category?.name}
-              </Link>
-            </li>
-            <li>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-2 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-              {prodData?.name}
-            </li>
-          </ul>
+          {prodData &&
+            <ul>
+              <li>
+                <Link href={`/categories/category-product/${prodData?.category?._id}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-2 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                  {prodData?.category?.name}
+                </Link>
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 mr-2 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                {prodData?.name}
+              </li>
+            </ul>
+          }
         </div>
         <div className='w-full h-full lg:h-4/5 py-4 px-4 flex items-center justify-center'>
           {isLoading
@@ -151,6 +151,7 @@ export default function Page({ params }: { params: pageParam }) {
                 <Loading />
               </div>
             :
+              prodData &&
               <div className='w-full h-full lg:w-4/5 lg:h-4/5 bg-gray-100 rounded-xl flex flex-col lg:flex-row justify-center shadow-2xl'>
                 <div className='w-full h-60 lg:w-4/12 rounded-xl my-6 mx-4 z-10 relative'>
                   {prodData?.image && (
@@ -198,6 +199,11 @@ export default function Page({ params }: { params: pageParam }) {
                   )}
                 </div>
               </div>
+          }
+          {isLoading === false && (prodData === undefined || prodData === null) &&
+            <p className='text-2xl my-4 text-center font-semibold text-red-400'>
+              No Product Found
+            </p>
           }
         </div>
         <ToastContainer />

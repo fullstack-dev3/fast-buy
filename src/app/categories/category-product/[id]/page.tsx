@@ -40,13 +40,15 @@ export default function Page({ params }: { params: pageParam }) {
   );
 
   useEffect(() => {
-    if (catData) {
-      setCatName(catData?.data.name);
+    if (catData && catData.success) {
+      setCatName(catData.data.name);
     }
   }, [catData]);
 
   useEffect(() => {
-    setProdData(prodData?.data);
+    if (prodData && prodData.success) {
+      setProdData(prodData.data);
+    }
   }, [prodData]);
 
   return (
@@ -57,7 +59,7 @@ export default function Page({ params }: { params: pageParam }) {
         style={{ minHeight: 'calc(100vh - 204px)' }}
       >
         <div className="text-sm breadcrumbs  border-b-2 border-b-orange-600">
-          <p className="text-2xl ml-2">Category: {catName}</p>
+          {catName && <p className="text-2xl ml-2">Category: {catName}</p>}
         </div>
         <div className='w-full h-full flex items-start justify-center flex-wrap overflow-auto'>
           {isLoading
@@ -78,7 +80,7 @@ export default function Page({ params }: { params: pageParam }) {
           {isLoading === false &&
             (product === undefined || product === null || product.length < 1) &&
               <p className='text-2xl my-4 text-center font-semibold text-red-400'>
-                No Product Found in this Category
+                No Category Found
               </p>
           }
         </div>
