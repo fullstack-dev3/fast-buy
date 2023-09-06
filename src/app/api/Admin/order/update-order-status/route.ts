@@ -10,11 +10,15 @@ export async function PUT(req: Request) {
 
     const isAuthenticated = await AuthCheck(req);
 
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, message: "You are not authorized." });
+    }
+
     if (isAuthenticated === 'admin') {
       const _id = await req.json();
 
       if(!_id) {
-        return NextResponse.json({ success: false, message: "Please provide the order id!" });
+        return NextResponse.json({ success: false, message: "Order ID is required." });
       }
 
       const saveData = await Order.findOneAndUpdate({ _id }, { isDelivered: true }, { new: true });
@@ -33,13 +37,13 @@ export async function PUT(req: Request) {
 
         return NextResponse.json({ success: true, data });
       } else {
-        return NextResponse.json({ success: false, message: "Failed to update the Order status. Please try again!" });
+        return NextResponse.json({ success: false, message: "Failed to update the order status. Please try again!" });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized." });
+      return NextResponse.json({ success: false, message: "No permission to update order status." });
     }
   } catch (error) {
-    console.log('Error in update order status:', error);
-    return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
+    console.log('Error in updating order status:', error);
+    return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }

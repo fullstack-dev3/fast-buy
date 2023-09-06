@@ -10,7 +10,7 @@ const schema = Joi.object({
   password: Joi.string().required(),
 });
 
-export  async function POST (req: Request){
+export async function POST(req: Request){
   await connectDB();
 
   const { email, password } = await req.json();
@@ -44,6 +44,6 @@ export  async function POST (req: Request){
     return NextResponse.json({ success: true, message: "Login Successfull",  finalData});
   } catch (error) {
     console.log('Error in login (server) => ', error);
-    return NextResponse.json({ success: false, message: "Something Went Wrong Please Retry Later !" });
+    return NextResponse.json({ status: 500, success: false, message: "Something went wrong. Please retry later !" });
   }
 }

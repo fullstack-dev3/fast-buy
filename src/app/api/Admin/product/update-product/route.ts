@@ -8,6 +8,10 @@ export async function PUT(req: Request) {
     await connectDB();
     const isAuthenticated = await AuthCheck(req);
 
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, message: "You are not authorized." });
+    }
+
     if (isAuthenticated === 'admin') {
       const data = await req.json();
       const {
@@ -38,13 +42,13 @@ export async function PUT(req: Request) {
       if (saveData) {
         return NextResponse.json({ success: true, message: "Product updated successfully!" });
       } else {
-        return NextResponse.json({ success: false, message: "Failed to update a product . Please try again!" });
+        return NextResponse.json({ success: false, message: "Failed to update the product . Please try again!" });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized." });
+      return NextResponse.json({ success: false, message: "No permission to update the product." });
     }
   } catch (error) {
-    console.log('Error in update a product :', error);
-    return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
+    console.log('Error in updating a product:', error);
+    return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }

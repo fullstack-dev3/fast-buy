@@ -8,6 +8,10 @@ export async function DELETE(req: Request) {
     await connectDB();
     const isAuthenticated = await AuthCheck(req);
 
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, message: "You are not authorized." });
+    }
+
     if (isAuthenticated === 'admin') {
       const { searchParams } = new URL(req.url);
       const id = searchParams.get('id');
@@ -19,15 +23,15 @@ export async function DELETE(req: Request) {
       const deleteData = await Product.findByIdAndDelete(id);
 
       if (deleteData) {
-        return NextResponse.json({ success: true, message: "Product Deleted successfully!" });
+        return NextResponse.json({ success: true, message: "Product deleted successfully!" });
       } else {
-        return NextResponse.json({ success: false, message: "Failed to Delete a Product. Please try again!" });
+        return NextResponse.json({ success: false, message: "Failed to delete the product. Please try again!" });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized." });
+      return NextResponse.json({ success: false, message: "No permission to delete the product." });
     }
   } catch (error) {
-    console.log('Error in deleting a Product:', error);
-    return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
+    console.log('Error in deleting a product:', error);
+    return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }

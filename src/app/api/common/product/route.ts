@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Product from "@/model/Product";
 import connectDB from "@/DB/connectDB";
 
-export const dynamic  = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   try {
@@ -17,6 +17,6 @@ export async function GET(req: Request) {
     }
   } catch (error) {
     console.log('Error in getting all products:', error);
-    return NextResponse.json({status : 500 , success: false, message: 'Something went wrong. Please try again!' });
+    return NextResponse.json({ status: 500 , success: false, message: 'Something went wrong. Please try again!' });
   }
 }

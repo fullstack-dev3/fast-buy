@@ -17,6 +17,10 @@ export async function POST(req: Request) {
     await connectDB();
     const isAuthenticated = await AuthCheck(req);
 
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, message: "You are not authorized." });
+    }
+
     if (isAuthenticated === 'admin') {
       const data = await req.json();
       const { name, description, image, fileName, slug } =  data;
@@ -40,10 +44,10 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, message: "Failed to add the category. Please try again!" });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized." });
+      return NextResponse.json({ success: false, message: "No permission to add the category." });
     }
   } catch (error) {
-    console.log('Error in adding a new category:', error);
-    return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
+    console.log('Error in adding a new category: ', error);
+    return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }

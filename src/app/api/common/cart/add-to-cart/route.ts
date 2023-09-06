@@ -22,7 +22,10 @@ export async function POST(req: Request) {
 
       const { error } = AddToCart.validate({ user, product, quantity });
       if (error) {
-        return NextResponse.json({ success: false, message: error.details[0].message.replace(/['"]+/g, '') });
+        return NextResponse.json({
+          success: false,
+          message: error.details[0].message.replace(/['"]+/g, '')
+        });
       }
 
       let saveData;
@@ -37,15 +40,15 @@ export async function POST(req: Request) {
       }
       
       if (saveData) {
-        return NextResponse.json({ success: true, message: "Product added to Cart!" });
+        return NextResponse.json({ success: true, message: "Product added to cart!" });
       } else {
         return NextResponse.json({ success: false, message: "Failed to add product to cart. Please try again!" });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized Please login!" });
+      return NextResponse.json({ success: false, message: "You are not authorized." });
     }
   } catch (error) {
     console.log('Error in adding a product to cart :', error);
-    return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
+    return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }

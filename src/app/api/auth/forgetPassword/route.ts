@@ -9,7 +9,7 @@ const schema = Joi.object({
   password: Joi.string().min(8).required(),
 });
 
-export async function POST (req : Request)  {
+export async function POST(req : Request)  {
   await connectDB();
 
   const { email, password} = await req.json();
@@ -32,6 +32,6 @@ export async function POST (req : Request)  {
     return NextResponse.json({ success: true, message: "Password Updated Successfully"  });
   } catch (error) {
     console.log('Error in forget Password (server) => ', error);
-    return NextResponse.json({ success: false, message: "Something Went Wrong Please Retry Later !" })
+    return NextResponse.json({ status: 500, success: false, message: "Something went wrong. Please retry later !" })
   }
 }

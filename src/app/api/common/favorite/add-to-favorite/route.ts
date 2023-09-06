@@ -22,7 +22,10 @@ export async function POST(req: Request) {
       const { error } = favorite.validate({ user, product });
 
       if (error) {
-        return NextResponse.json({ success: false, message: error.details[0].message.replace(/['"]+/g, '') });
+        return NextResponse.json({
+          success: false,
+          message: error.details[0].message.replace(/['"]+/g, '')
+        });
       }
 
       const saveData = await Favorite.create(data);
@@ -32,10 +35,10 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: false, message: "Failed to add product to Favourites. Please try again!" });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized. Please login!" });
+      return NextResponse.json({ success: false, message: "You are not authorized" });
     }
   } catch (error) {
-      console.log('Error in adding a product to favorite :', error);
-      return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
+      console.log('Error in adding a product to favorite:', error);
+      return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }

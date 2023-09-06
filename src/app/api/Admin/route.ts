@@ -14,6 +14,10 @@ export async function GET(req: Request) {
 
     const isAuthenticated = await AuthCheck(req);
 
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, message: "You are not authorized." });
+    }
+
     if (isAuthenticated === 'admin') {
       const year = new Date().getFullYear();
       const month = new Date().getMonth() + 1;
@@ -37,10 +41,10 @@ export async function GET(req: Request) {
 
       return NextResponse.json({ data, status: 200 });
     } else {
-      return NextResponse.json({ success: false, message: "Failed to get Admin Data" });
+      return NextResponse.json({ success: false, message: "No permission to get admin data." });
     }
   } catch (error) {
-    console.log('Error in getting Admin Data: ', error);
+    console.log('Error in getting admin data: ', error);
     return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }

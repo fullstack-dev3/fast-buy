@@ -10,8 +10,7 @@ const schema = Joi.object({
   name: Joi.string().required()
 });
 
-export  async function POST (req : Request)  {
-  console.log('i got hit')
+export async function POST(req : Request)  {
   await connectDB();
 
   const { email, password, name } = await req.json();
@@ -28,17 +27,17 @@ export  async function POST (req : Request)  {
     const ifExist = await User.findOne({ email });
     
     if (ifExist) {
-      return NextResponse.json({ success: false, message: "User Already Exist" });
+      return NextResponse.json({ success: false, message: "User already exist." });
     }
 
     else {
       const hashedPassword = await hash(password, 12)
       const createUser = await User.create({ email, name, password: hashedPassword });
       
-      if(createUser) return NextResponse.json({ success: true, message: "Account created successfully" });
+      if(createUser) return NextResponse.json({ success: true, message: "Account created successfully!" });
     }
   } catch (error) {
     console.log('Error in register (server) => ', error);
-    return NextResponse.json({ success: false, message: "Something Went Wrong Please Retry Later !" });
+    return NextResponse.json({ status: 500, success: false, message: "Something went wrong. Please retry later !" });
   }
 }

@@ -20,7 +20,10 @@ export async function POST(req: Request) {
 
       const { error } = createOrderSchema.validate({ user });
       if (error) {
-        return NextResponse.json({ success: false, message: error.details[0].message.replace(/['"]+/g, '') });
+        return NextResponse.json({
+          success: false,
+          message: error.details[0].message.replace(/['"]+/g, '')
+        });
       }
 
       const saveData = await Order.create(data);
@@ -29,13 +32,13 @@ export async function POST(req: Request) {
         await Cart.deleteMany({ user });
         return NextResponse.json({ success: true, message: "Products are ordered successfully!" });
       } else {
-        return NextResponse.json({ success: false, message: "Failed to create Order. Please try again!" });
+        return NextResponse.json({ success: false, message: "Failed to create order. Please try again!" });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized Please login!" });
+      return NextResponse.json({ success: false, message: "You are not authorized." });
     }
   } catch (error) {
-    console.log('Error in creating order :', error);
-    return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
+    console.log('Error in creating order:', error);
+    return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }

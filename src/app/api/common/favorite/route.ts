@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import AuthCheck from "@/middleware/AuthCheck";
 import connectDB from "@/DB/connectDB";
 
-export const dynamic  = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   await connectDB();
@@ -12,7 +12,7 @@ export async function GET(req: Request) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ status: 400, success: false, message: 'Please Login !' });
+      return NextResponse.json({ status: 400, success: false, message: 'Please Login!' });
     }
 
     const isAuthenticated = await AuthCheck(req);
@@ -26,10 +26,10 @@ export async function GET(req: Request) {
         return NextResponse.json({ status: 204, success: false, message: 'No favroite found.' });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized Please login!" });
+      return NextResponse.json({ success: false, message: "You are not authorized." });
     }
   } catch (error) {
-    console.log('Error in getting  bookmark :', error);
+    console.log('Error in getting favorite:', error);
     return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }

@@ -21,6 +21,10 @@ export async function POST(req: Request) {
     await connectDB();
     const isAuthenticated = await AuthCheck(req);
 
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, message: "You are not authorized." });
+    }
+
     if (isAuthenticated === 'admin') {
       const data = await req.json();
 
@@ -60,13 +64,13 @@ export async function POST(req: Request) {
       if (saveData) {
         return NextResponse.json({ success: true, message: "Product added successfully!" });
       } else {
-        return NextResponse.json({ success: false, message: "Failed to add the Product. Please try again!" });
+        return NextResponse.json({ success: false, message: "Failed to add the product. Please try again!" });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized." });
+      return NextResponse.json({ success: false, message: "No permission to add the product." });
     }
   } catch (error) {
     console.log('Error in adding a new Product:', error);
-    return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
+    return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }

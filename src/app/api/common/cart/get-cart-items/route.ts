@@ -3,7 +3,7 @@ import AuthCheck from "@/middleware/AuthCheck";
 import Cart from "@/model/Cart";
 import connectDB from "@/DB/connectDB";
 
-export const dynamic  = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   await connectDB();
@@ -13,7 +13,7 @@ export async function GET(req: Request) {
     const id = searchParams.get('id');
 
     if (!id) {
-      return NextResponse.json({ status: 400, success: false, message: 'Please Login !' });
+      return NextResponse.json({ status: 400, success: false, message: 'Please Login!' });
     }
 
     const isAuthenticated = await AuthCheck(req);
@@ -24,10 +24,10 @@ export async function GET(req: Request) {
       if (getData) {
         return NextResponse.json({ success: true, data: getData });
       } else {
-        return NextResponse.json({ status: 204, success: false, message: 'No Cart Item found.' });
+        return NextResponse.json({ status: 204, success: false, message: 'No cart item found.' });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized. Please login!" });
+      return NextResponse.json({ success: false, message: "You are not authorized." });
     }
   } catch (error) {
     console.log('Error in getting cart items:', error);

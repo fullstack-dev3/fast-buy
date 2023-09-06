@@ -8,6 +8,10 @@ export async function PUT(req: Request) {
     await connectDB();
     const isAuthenticated = await AuthCheck(req);
 
+    if (!isAuthenticated) {
+      return NextResponse.json({ success: false, message: "You are not authorized." });
+    }
+
     if (isAuthenticated === 'admin') {
       const data = await req.json();
       const  {_id, name, description, slug} = data;
@@ -19,10 +23,10 @@ export async function PUT(req: Request) {
         return NextResponse.json({ success: false, message: "Failed to update the category. Please try again!" });
       }
     } else {
-      return NextResponse.json({ success: false, message: "You are not authorized." });
+      return NextResponse.json({ success: false, message: "No permission to update the category." });
     }
   } catch (error) {
-    console.log('Error in update a category:', error);
-    return NextResponse.json({ success: false, message: 'Something went wrong. Please try again!' });
+    console.log('Error in updating a category:', error);
+    return NextResponse.json({ status: 500, success: false, message: 'Something went wrong. Please try again!' });
   }
 }
